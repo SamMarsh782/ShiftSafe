@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import { getObject } from '@/utils/apis/getObject';
+import { putImage } from '@/utils/apis/getObject';
 
 import { RootStackParamList } from '@/types/rootStackParamList';
 
@@ -12,7 +12,7 @@ import { NavBar } from '@/components/views/navBar';
 import QuestionsModal from '@/components/modals/questionsModal';
 import StandardButton from '@/components/buttons/standardButton';
 
-export default function HomeScreen() {
+export default function Equipment() {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
@@ -82,19 +82,7 @@ export default function HomeScreen() {
 
   const [selectedEquipment, setSelectedEquipment] = useState(equipmentData[0]);
 
-  /*useEffect(() => {
-    getObject()
-      .then(data => {
-        if (data) {
-          setJsonData(data);
-        } else {
-          console.error('Received null data');
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error.message);
-      });
-  }, []);*/
+  
 
   return (
     <SafeAreaView style={{flex: 1}}>

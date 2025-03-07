@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "MyApp",
-    "slug": "myapp",
+    "name": "ShiftSafe",
+    "slug": "shiftsafe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/testIcon.png",
-    "scheme": "myapp",
+    "scheme": "shiftsafe",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,7 +13,7 @@
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.yourcompany.myapp",
+      "package": "com.yourcompany.shiftsafe",
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/testIcon.png",
         "backgroundColor": "#ffffff"
       },
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.yourcompany.myapp"
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.yourcompany.shiftsafe"
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +44,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3f902d6d-1433-4918-b957-8cd5a6f476c9"
+      }
     }
   }
 }

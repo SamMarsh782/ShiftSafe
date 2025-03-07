@@ -20,7 +20,6 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
@@ -45,6 +44,13 @@ export default function TabLayout() {
         options={{
           title: 'Tasks',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="qrScan"
+        options={{
+          title: 'QR Scan',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="digitalcrown.horizontal.arrow.counterclockwise.fill" color={color} />,
         }}
       />
     </Tabs>

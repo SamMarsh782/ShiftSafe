@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, BackHandler } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import { getObject } from '@/utils/apis/getObject';
+import { postImage } from '@/utils/apis/getObject';
 
 import { RootStackParamList } from '@/types/rootStackParamList';
 
