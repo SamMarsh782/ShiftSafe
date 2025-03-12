@@ -27,7 +27,7 @@ const SectionText = styled(Text)`
 `;
 
 const LabelText = styled(SectionText)`
-  color: ${colors.darkBrown};
+  color: ${colors.buttonColor};
 `;
 
 type FieldProps = {

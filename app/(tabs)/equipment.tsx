@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView } from 'react-native';
+import { Text, SafeAreaView, BackHandler } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import { putImage } from '@/utils/apis/getObject';
+import { postImage } from '@/utils/apis/getObject';
 
 import { RootStackParamList } from '@/types/rootStackParamList';
 
@@ -11,13 +11,14 @@ import ListButton from '@/components/buttons/listButton';
 import { NavBar } from '@/components/views/navBar';
 import QuestionsModal from '@/components/modals/questionsModal';
 import StandardButton from '@/components/buttons/standardButton';
+import { router } from 'expo-router';
 
 export default function Equipment() {
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  
-  const navigateToPage = (page: keyof RootStackParamList) => {
-    navigation.navigate(page);
+  const navigateHome = () => {
+    router.replace({
+      pathname: "./",
+  });
   };
 
   const getQuestions = () => {
@@ -43,10 +44,6 @@ export default function Equipment() {
     ];
     return questions;
   }
-
-  const [answers, setAnswers] = useState([
-    { ID: 11111, Equipment: 11111, Question: 12345, PretripID: 44444, Answer: "yes" }
-  ]);
 
   const [newAnswers, setNewAnswers] = useState([]);
 
@@ -89,7 +86,7 @@ export default function Equipment() {
       <NavBar>
         <StandardButton
           title="Back"
-          onPress={() => navigateToPage('index')}
+          onPress={() => navigateHome()}
         >
         </StandardButton>
       </NavBar>
@@ -98,7 +95,7 @@ export default function Equipment() {
           equipment={selectedEquipment}
           modalVisible={questionsModalVisible}
           setModalVisible={setQuestionsModalVisible}
-          navigateToPage={navigateToPage}
+          navigateToPage={navigateHome}
           questions={getQuestions()}
           newAnswers={newAnswers}
           setNewAnswers={setNewAnswers}

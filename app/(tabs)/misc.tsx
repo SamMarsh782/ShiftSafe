@@ -9,7 +9,7 @@ import StandardButton from '@/components/buttons/standardButton';
 import { getCurrentLocation } from '@/utils/tools/getLocation';
 import { LocationObject } from 'expo-location';
 
-export default function Tasks() {
+export default function Misc() {
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [time, setTime] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export default function Tasks() {
   };
 
   const getDeviceInfo = () => {
-    setDeviceId(Device.osBuildId ?? 'n/a');
+    setDeviceId(Device.osBuildFingerprint ?? 'n/a');
     setDeviceName(Device.deviceName ?? 'n/a');
     setDeviceType(Device.modelName ?? 'n/a');
     setDeviceModel(Device.modelId ?? 'n/a');

@@ -50,7 +50,7 @@ export default function TabLayout() {
         name="qrScan"
         options={{
           title: 'QR Scan',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="digitalcrown.horizontal.arrow.counterclockwise.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
     </Tabs>

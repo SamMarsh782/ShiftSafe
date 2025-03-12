@@ -24,7 +24,7 @@ type ButtonContainerProps = {
 };
 
 const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
-  background-color: ${props => props.$bgColor || colors.darkBrown};
+  background-color: ${props => props.$bgColor || colors.buttonColor};
   height: 50px;
   width: ${props => props.$width || '80%'};
   display: flex;

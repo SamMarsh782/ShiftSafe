@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, BackHandler } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 import { postImage } from '@/utils/apis/getObject';
 
@@ -13,12 +13,10 @@ import { NavBar } from '@/components/views/navBar';
 import CheckDigitModal from '@/components/modals/checkDigitModal';
 import StandardButton from '@/components/buttons/standardButton';
 
-export default function HomeScreen() {
-
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+export default function Login() {
   
-  const navigateToPage = (page: keyof RootStackParamList) => {
-    navigation.navigate(page);
+  const navigateToEquipment = () => {
+    router.replace(`/equipment`);
   };
 
   const [cdModalVisible, setCDModalVisible] = useState(false);
@@ -102,7 +100,7 @@ export default function HomeScreen() {
           setModalVisible={setCDModalVisible}
           randomDigits={checkDigits}
           generateRandomDigits={generateCheckDigits}
-          navigateToPage={navigateToPage}
+          navigateToPage={navigateToEquipment}
         />
       ) : null}
         <ScrollBGView>

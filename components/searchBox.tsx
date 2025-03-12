@@ -26,7 +26,7 @@ const StyledTextInput = styled(TextInput)`
 `;
 
 const StyledFieldText = styled(Text)`
-  color: ${colors.darkBrown};
+  color: ${colors.buttonColor};
   text-align: left;
 `;
 

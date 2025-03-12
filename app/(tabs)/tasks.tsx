@@ -26,7 +26,7 @@ export default function Tasks() {
   }, [qrData]);
 
   const handleNavigateToHome = () => {
-    router.replace("./index");
+    router.replace("./");
   };
 
   const pickImage = async () => {

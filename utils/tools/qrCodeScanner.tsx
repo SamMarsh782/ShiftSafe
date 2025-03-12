@@ -15,7 +15,6 @@ const QRCodeScanner = () => {
 
   const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
     setScanned(true);
-    console.log(`QR code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {

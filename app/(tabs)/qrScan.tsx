@@ -21,11 +21,10 @@ export default function QRScan() {
 
                 onBarcodeScanned={
                     ({ data }) => {
-                        console.log(data);
                         router.replace({
                             pathname: "./tasks",
                             params: {qrData: data.toString()}
-                     });
+                        });
                     }
                 }
             />
