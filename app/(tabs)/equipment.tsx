@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, BackHandler } from 'react-native';
+import { Text, BackHandler } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 import ScrollBGView from '@/components/views/scrollBGView';
 import ListButton from '@/components/buttons/listButton';
 import NavBar from '@/components/views/navBar';
 import QuestionsModal from '@/components/modals/questionsModal';
-import StandardButton from '@/components/buttons/standardButton';
-import { router } from 'expo-router';
+import BackgroundView from '@/components/views/backgroundView';
+
+import { useTheme } from '@/contexts/themeContext';
+
 
 export default function Equipment() {
+  const { theme } = useTheme();
 
   const navigateHome = () => {
     router.replace({
@@ -77,36 +82,32 @@ export default function Equipment() {
   
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <NavBar>
-        <StandardButton
-          title="Back"
-          onPress={() => navigateHome()}
-        >
-        </StandardButton>
-      </NavBar>
-      {questionsModalVisible ? (
-        <QuestionsModal
-          equipment={selectedEquipment}
-          modalVisible={questionsModalVisible}
-          setModalVisible={setQuestionsModalVisible}
-          navigateToPage={navigateHome}
-          questions={getQuestions()}
-          newAnswers={newAnswers}
-          setNewAnswers={setNewAnswers}
-        />
-      ) : null}
-        <ScrollBGView>
-          {equipmentData
-            .sort((a, b) => a.Equipment.localeCompare(b.Equipment))
-            .map(eqpt => (
-              <ListButton
-                key={eqpt.ID}
-                title={`${eqpt.Equipment}`}
-                onPress={() => handleSelectItem(eqpt)}
-              />
-            ))}
-        </ScrollBGView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
+      <BackgroundView>
+        <NavBar title='Select Your Equipment' />
+        {questionsModalVisible ? (
+          <QuestionsModal
+            equipment={selectedEquipment}
+            modalVisible={questionsModalVisible}
+            setModalVisible={setQuestionsModalVisible}
+            navigateToPage={navigateHome}
+            questions={getQuestions()}
+            newAnswers={newAnswers}
+            setNewAnswers={setNewAnswers}
+          />
+        ) : null}
+          <ScrollBGView>
+            {equipmentData
+              .sort((a, b) => a.Equipment.localeCompare(b.Equipment))
+              .map(eqpt => (
+                <ListButton
+                  key={eqpt.ID}
+                  title={`${eqpt.Equipment}`}
+                  onPress={() => handleSelectItem(eqpt)}
+                />
+              ))}
+          </ScrollBGView>
+      </BackgroundView>
     </SafeAreaView>
   );
 };

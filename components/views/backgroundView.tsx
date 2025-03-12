@@ -8,14 +8,12 @@ interface BackgroundViewProps {
   children: React.ReactNode;
 }
 
-const BackgroundViewComponent: React.FC<BackgroundViewProps> = ({ children }) => {
+const BackgroundView: React.FC<BackgroundViewProps> = ({ children }) => {
   const { theme } = useTheme();
 
   const BackgroundView = styled(View)`
     background-color: ${theme.secondaryColor};
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100%;
     width: 100%;
   `;
@@ -23,4 +21,4 @@ const BackgroundViewComponent: React.FC<BackgroundViewProps> = ({ children }) =>
   return <BackgroundView>{children}</BackgroundView>;
 };
 
-export default BackgroundViewComponent;
+export default BackgroundView;

@@ -1,33 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, BackHandler } from 'react-native';
-import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Device from 'expo-device';
 
-import { postImage } from '@/utils/apis/getObject';
 import { getUsers } from '@/utils/apis/getUsers';
 
-import { RootStackParamList } from '@/types/rootStackParamList';
-
 import ScrollBGView from '@/components/views/scrollBGView';
-import WideContainer from '@/components/views/wideContainer';
 import ListButton from '@/components/buttons/listButton';
 import NavBar from '@/components/views/navBar';
 import CheckDigitModal from '@/components/modals/checkDigitModal';
-import StandardButton from '@/components/buttons/standardButton';
 import { User } from '@/types/user';
+import BackgroundView from '@/components/views/backgroundView';
+
+import { useTheme } from '@/contexts/themeContext';
 
 export default function Login() {
-  
-  const navigateToEquipment = () => {
-    router.replace(`/equipment`);
-  };
+  const { theme } = useTheme();
+  const [deviceName, setDeviceName] = useState<string | null>(Device.deviceName);
+
 
   const [cdModalVisible, setCDModalVisible] = useState(false);
 
-  const [checkDigits, setCheckDigits] = useState([0, 0, 0,]);
+  const [checkDigits, setCheckDigits] = useState([0, 0, 0]);
   const generateCheckDigits = () => {
     const digits = [];
     for (let i = 0; i < 3; i++) {
-      digits.push(Math.floor(Math.random() * 10));
+      digits.push(Math.floor(Math.random() * 100));
     }
     setCheckDigits(digits);
   };
@@ -50,42 +47,19 @@ export default function Login() {
     setSelectedUser(itm);
   };
 
-
-  const [selectedEquipment, setSelectedEquipment] = useState(null);
-
-  /*useEffect(() => {
-    getObject()
-      .then(data => {
-        if (data) {
-          setJsonData(data);
-        } else {
-          console.error('Received null data');
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error.message);
-      });
-  }, []);*/
-
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <NavBar>
-      <StandardButton
-          title="Back"
-          onPress={() => BackHandler.exitApp()}
-        >
-        </StandardButton>
-      </NavBar>
-      {cdModalVisible && selectedUser ? (
-        <CheckDigitModal
-          user={selectedUser}
-          modalVisible={cdModalVisible}
-          setModalVisible={setCDModalVisible}
-          randomDigits={checkDigits}
-          generateRandomDigits={generateCheckDigits}
-          navigateToPage={navigateToEquipment}
-        />
-      ) : null}
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
+      <BackgroundView>
+        <NavBar title='Select User'/>
+        {cdModalVisible && selectedUser ? (
+          <CheckDigitModal
+            user={selectedUser}
+            modalVisible={cdModalVisible}
+            setModalVisible={setCDModalVisible}
+            randomDigits={checkDigits}
+            generateRandomDigits={generateCheckDigits}
+          />
+        ) : null}
         <ScrollBGView>
           {userData
             .sort((a, b) => a.User.localeCompare(b.User))
@@ -97,6 +71,7 @@ export default function Login() {
               />
             ))}
         </ScrollBGView>
+      </BackgroundView>
     </SafeAreaView>
   );
-};
+}

@@ -38,10 +38,10 @@ export default function Misc() {
   };
 
   const getDeviceInfo = () => {
-    setDeviceId(Device.osBuildFingerprint ?? 'n/a');
-    setDeviceName(Device.deviceName ?? 'n/a');
-    setDeviceType(Device.modelName ?? 'n/a');
-    setDeviceModel(Device.modelId ?? 'n/a');
+    setDeviceId(Device.osBuildFingerprint);
+    setDeviceName(Device.deviceName);
+    setDeviceType(Device.modelName);
+    setDeviceModel(Device.modelId);
   };
 
   useEffect(() => {

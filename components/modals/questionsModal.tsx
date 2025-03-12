@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Alert, Modal, Text, View } from 'react-native';
+import { Modal, Text, View } from 'react-native';
 import styled from 'styled-components';
+import { router } from 'expo-router';
 
 import SquareButton from '../buttons/squareButton';
 import StandardButton from '../buttons/standardButton';
@@ -102,6 +103,7 @@ const QuestionsModal = ({
 
   function handleSubmitPress(setModalVisible: (modalVisible: boolean) => void) {
     setModalVisible(false);
+    router.push('./tasks');
   }
 
   function handleCancelPress(setModalVisible: (modalVisible: boolean) => void) {

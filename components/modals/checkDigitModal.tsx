@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Modal, Text, View } from 'react-native';
 import styled from 'styled-components';
+import { router } from 'expo-router';
 
 import SquareButton from '../buttons/squareButton';
 import StandardButton from '../buttons/standardButton';
@@ -8,7 +9,6 @@ import StandardButton from '../buttons/standardButton';
 import { useTheme } from '@/contexts/themeContext';
 
 import { User } from '../../types/user';
-import { RootStackParamList } from '@/types/rootStackParamList';
 
 type ModalProps = {
   user: User;
@@ -16,7 +16,6 @@ type ModalProps = {
   setModalVisible: (modalVisible: boolean) => void;
   randomDigits: number[];
   generateRandomDigits: () => void;
-  navigateToPage: (page: keyof RootStackParamList) => void;
 };
 
 const CheckDigitModal = ({
@@ -25,9 +24,22 @@ const CheckDigitModal = ({
   setModalVisible,
   randomDigits,
   generateRandomDigits,
-  navigateToPage,
 }: ModalProps) => {
   const { theme } = useTheme();
+  const [shuffledDigits, setShuffledDigits] = useState<number[]>([]);
+
+  useEffect(() => {
+    shuffleDigits();
+  }, [randomDigits]);
+
+  const shuffleDigits = () => {
+    const digits = [...randomDigits, user.Check_Digit];
+    for (let i = digits.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [digits[i], digits[j]] = [digits[j], digits[i]];
+    }
+    setShuffledDigits(digits);
+  };
 
   const ModalView = styled(View)`
     background-color: ${theme.blankSpace};
@@ -67,97 +79,59 @@ const CheckDigitModal = ({
     text-align: center;
   `;
 
+  const reloadDigits = () => {
+    generateRandomDigits();
+    shuffleDigits();
+  };
+
   const handleCancelPress = (
     setModalVisible: (modalVisible: boolean) => void,
-    generateRandomDigits: () => void
+    reloadDigits: () => void
   ) => {
     setModalVisible(false);
-    generateRandomDigits();
+    reloadDigits();
   };
 
   const handleCDPress = (
     checkDigit: number,
     user: User,
     setModalVisible: (modalVisible: boolean) => void,
-    navigateToPage: (page: keyof RootStackParamList) => void,
-    generateRandomDigits: () => void
+    reloadDigits: () => void
   ) => {
-    generateRandomDigits();
     if (checkDigit === user.Check_Digit) {
       setModalVisible(false);
-      navigateToPage('equipment');
+      router.push(`/equipment`);
     } else {
-      Alert.alert('Guess again, idiot!');
+      Alert.alert('Incorrect Check Digit', 'Please try again.', [
+        { text: 'OK', onPress: () => reloadDigits() },
+      ]);
     }
   };
 
   return (
-    <Modal animationType="slide" transparent={true} visible={modalVisible}>
+    <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <CenteredView>
         <ModalView>
           <ModalTitle>Select check digit for:</ModalTitle>
           <ModalTitle>{user.User}</ModalTitle>
           <SpacedView>
-            <SquareButton
-              bgColor={theme.tertiaryColor}
-              textColor={theme.blankSpace}
-              size="50px"
-              onPress={() =>
-                handleCDPress(
-                  randomDigits[0],
-                  user,
-                  setModalVisible,
-                  navigateToPage,
-                  generateRandomDigits
-                )
-              }
-              title={randomDigits[0].toString()}
-            />
-            <SquareButton
-              bgColor={theme.tertiaryColor}
-              textColor={theme.blankSpace}
-              size="50px"
-              onPress={() =>
-                handleCDPress(
-                  randomDigits[1],
-                  user,
-                  setModalVisible,
-                  navigateToPage,
-                  generateRandomDigits
-                )
-              }
-              title={randomDigits[1].toString()}
-            />
-            <SquareButton
-              bgColor={theme.tertiaryColor}
-              textColor={theme.blankSpace}
-              size="50px"
-              onPress={() =>
-                handleCDPress(
-                  randomDigits[2],
-                  user,
-                  setModalVisible,
-                  navigateToPage,
-                  generateRandomDigits
-                )
-              }
-              title={randomDigits[2].toString()}
-            />
-            <SquareButton
-              bgColor={theme.tertiaryColor}
-              textColor={theme.blankSpace}
-              size="50px"
-              onPress={() =>
-                handleCDPress(
-                  user.Check_Digit,
-                  user,
-                  setModalVisible,
-                  navigateToPage,
-                  generateRandomDigits
-                )
-              }
-              title={user.Check_Digit.toString()}
-            />
+            {shuffledDigits.map((digit, index) => (
+              <SquareButton
+                key={index}
+                bgColor={theme.tertiaryColor}
+                textColor={theme.blankSpace}
+                size="50px"
+                onPress={() =>
+                  handleCDPress(
+                    digit,
+                    user,
+                    setModalVisible,
+                    reloadDigits
+                  )
+                }
+                title={digit.toString()}
+              />
+            ))}
           </SpacedView>
           <StandardButton
             bgColor={theme.tertiaryColor}
