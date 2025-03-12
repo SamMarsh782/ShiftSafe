@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import ScrollBGView from '@/components/views/scrollBGView';
 import ListButton from '@/components/buttons/listButton';
@@ -11,8 +11,13 @@ import BackgroundView from '@/components/views/backgroundView';
 
 import { useTheme } from '@/contexts/themeContext';
 
+import { Equipment } from '@/types/equipment';
+import { Question } from '@/types/question';
 
-export default function Equipment() {
+import { getEquipment } from '@/utils/apis/getEquipment';
+import { getQuestions } from '@/utils/apis/getQuestions';
+
+export default function EquipmentPage() {
   const { theme } = useTheme();
 
   const navigateHome = () => {
@@ -21,63 +26,41 @@ export default function Equipment() {
   });
   };
 
-  const getQuestions = () => {
-    const questions = [
-      { ID: 12345, Equipment: 11111, Question: "Are the forks good?" },
-      { ID: 23456, Equipment: 11111, Question: "Do the lights work?" },
-      { ID: 34567, Equipment: 11111, Question: "Are all of the labels and warnings attached in all of the locations that the labels need to be attached?" },
-      { ID: 45678, Equipment: 22222, Question: "Are the forks good?" },
-      { ID: 56789, Equipment: 22222, Question: "Are the wheels good?" },
-      { ID: 67890, Equipment: 22222, Question: "Does steering work?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 78901, Equipment: 22222, Question: "Is the item in good working condition?" },
-      { ID: 89012, Equipment: 33333, Question: "Filler question" },
-      { ID: 90123, Equipment: 44444, Question: "Filler question" },
-      { ID: 99999, Equipment: 55555, Question: "Filler question" }
-    ];
-    return questions;
-  }
-
   const [newAnswers, setNewAnswers] = useState([]);
 
   const [questionsModalVisible, setQuestionsModalVisible] = useState(false);
 
-  const [equipmentData, setEquipmentData] = useState([
-    {
-      "ID": 11111,
-      "Equipment": "Forklift",
-    },
-    {
-      "ID": 22222,
-      "Equipment": "Pallet Jack",
-    },
-    {
-      "ID": 33333,
-      "Equipment": "Scissor Lift",
-    },
-    {
-      "ID": 44444,
-      "Equipment": "Boom Lift",
-    },
-    {
-      "ID": 55555,
-      "Equipment": "RF Scanner",
-    }
-  ]);
+  const [equipmentData, setEquipmentData] = useState<Equipment[]>([]);
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
+  const { userId } = useLocalSearchParams();
+  const numericUserId = Array.isArray(userId) ? parseInt(userId[0], 10) : parseInt(userId, 10);
+
+    useEffect(() => {
+      getEquipment(numericUserId).then(equips => {
+        setEquipmentData(equips);
+        setSelectedEquipment(equips[0]);
+      }).catch(error => {
+        console.error('Error fetching users:', error.message);
+      });
+    }, [userId]);
+
+  const [questionData, setQuestionData] = useState<Question[]>([]);
+
+    useEffect(() => {
+      if (selectedEquipment) {
+        getQuestions(selectedEquipment.ID).then(questions => {
+          setQuestionData(questions);
+        }).catch(error => {
+          console.error('Error fetching users:', error.message);
+        });
+      }
+    }, [selectedEquipment]);
 
   const handleSelectItem = (itm: any) => {
     setQuestionsModalVisible(true);
     setSelectedEquipment(itm);
   };
 
-  const [selectedEquipment, setSelectedEquipment] = useState(equipmentData[0]);
 
   
 
@@ -85,13 +68,13 @@ export default function Equipment() {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
         <NavBar title='Select Your Equipment' />
-        {questionsModalVisible ? (
+        {questionsModalVisible && selectedEquipment ? (
           <QuestionsModal
             equipment={selectedEquipment}
             modalVisible={questionsModalVisible}
             setModalVisible={setQuestionsModalVisible}
             navigateToPage={navigateHome}
-            questions={getQuestions()}
+            questions={questionData}
             newAnswers={newAnswers}
             setNewAnswers={setNewAnswers}
           />

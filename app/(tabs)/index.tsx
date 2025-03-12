@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Device from 'expo-device';
+import { router } from 'expo-router';
 
 import { getUsers } from '@/utils/apis/getUsers';
+import { getDeviceUser } from '@/utils/apis/getDeviceUser';
 
 import ScrollBGView from '@/components/views/scrollBGView';
 import ListButton from '@/components/buttons/listButton';
@@ -12,11 +14,23 @@ import { User } from '@/types/user';
 import BackgroundView from '@/components/views/backgroundView';
 
 import { useTheme } from '@/contexts/themeContext';
+import { setParams } from 'expo-router/build/global-state/routing';
 
 export default function Login() {
   const { theme } = useTheme();
   const [deviceName, setDeviceName] = useState<string | null>(Device.deviceName);
-
+  useEffect(() => {
+    if (deviceName) {
+      getDeviceUser(deviceName).then(user => {
+        if (user) {
+          router.replace({
+            pathname: "./equipment",
+            params: {userId: user}
+          });
+        }
+      });
+    }
+  }, []);
 
   const [cdModalVisible, setCDModalVisible] = useState(false);
 

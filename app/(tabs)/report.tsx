@@ -1,36 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, Button, Image, View, Modal } from 'react-native';
+import { Text, Button, Image, View, Modal } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { useCameraPermissions } from 'expo-camera';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import { postImage } from '@/utils/apis/getObject';
 
-import BackgroundView from '@/components/views/backgroundView';
+import BGScrollView from '@/components/views/scrollBGView';
 import StandardButton from '@/components/buttons/standardButton';
+import NavBar from '@/components/views/navBar';
 
 import { useTheme } from '@/contexts/themeContext';
 
-export default function Tasks() {
-  const { theme, toggleTheme } = useTheme();
+export default function Report() {
+  const { theme } = useTheme();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [scanValue, setScanValue] = useState<string | null>(null);
-  const { qrData } = useLocalSearchParams();
-
-  useEffect(() => {
-    if (qrData) {
-      console.log('Received qrData:', qrData);
-      if (typeof qrData === 'string') {
-        setScanValue(qrData);
-      } else {
-        setScanValue('Invalid QR Code');
-      }
-    }
-  }, [qrData]);
-
-  const handleNavigateToHome = () => {
-    router.replace("./");
-  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -90,18 +75,10 @@ export default function Tasks() {
     }
   };
 
-  const ScanQR = () => {
-    router.replace("./qrScan");
-  }
-
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <BackgroundView>
-        <StandardButton
-          title={scanValue ?? "Default Title"}
-          onPress={handleNavigateToHome}
-          bgColor={theme.primaryColor}
-        />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
+      <BGScrollView>
+        <NavBar title="Report a Problem" />
         <StandardButton
           title="Pick an image from camera roll"
           onPress={pickImage}
@@ -112,23 +89,14 @@ export default function Tasks() {
           onPress={takePhoto}
           bgColor={theme.primaryColor}
         />
-        <StandardButton
-          title="Scan QR Code"
-          onPress={ScanQR}
-          bgColor={theme.primaryColor}
-        />
-        <StandardButton
-          title="Toggle Theme"
-          onPress={toggleTheme}
-          bgColor={theme.primaryColor}
-        />
-        {selectedImage && (
-          <View style={{ alignItems: 'center', marginTop: 20 }}>
+        <View style={{ alignItems: 'center', marginTop: 20 }}>
+          {selectedImage ? (
             <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
-            <Text>{scanValue}</Text>
-          </View>
-        )}
-      </BackgroundView>
+          ) : (
+            <Image source={require('@/assets/images/testIcon.png')} style={{ width: 200, height: 200 }} />
+          )}
+        </View>
+      </BGScrollView>
     </SafeAreaView>
   );
 }

@@ -7,10 +7,6 @@ import { router } from 'expo-router';
 /* Styles */
 import { useTheme } from '@/contexts/themeContext';
 
-const handlePress = () => {
-  console.log('Not implemented yet');
-}
-
 type TextProps = {
   $textColor?: string;
 };
@@ -48,11 +44,11 @@ const MenuButton: React.FC<PressableButtonProps> = ({
   textColor,
   ...rest
 }) => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <ButtonContainer
-      onPress={() => handlePress()}
+      onPress={() => toggleTheme()}
       $bgColor={bgColor || theme.secondaryColor}
       {...rest}
     >

@@ -22,7 +22,7 @@ export default function QRScan() {
                 onBarcodeScanned={
                     ({ data }) => {
                         router.replace({
-                            pathname: "./tasks",
+                            pathname: "./menu",
                             params: {qrData: data.toString()}
                         });
                     }

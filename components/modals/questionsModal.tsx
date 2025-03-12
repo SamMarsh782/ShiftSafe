@@ -97,13 +97,9 @@ const QuestionsModal = ({
     height: 60%;
   `;
 
-  function filterQuestions(questions: any, equipment: Equipment) {
-    return questions.filter((question: any) => question.Equipment === equipment.ID);
-  }
-
   function handleSubmitPress(setModalVisible: (modalVisible: boolean) => void) {
     setModalVisible(false);
-    router.push('./tasks');
+    router.push('./menu');
   }
 
   function handleCancelPress(setModalVisible: (modalVisible: boolean) => void) {
@@ -113,8 +109,6 @@ const QuestionsModal = ({
   function handleYesPress() {}
 
   function handleNoPress() {}
-
-  const [filteredQuestions, setFilteredQuestions] = useState(filterQuestions(questions, equipment));
 
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -127,7 +121,7 @@ const QuestionsModal = ({
               height='60%'
               bgColor={theme.blankSpace}
             >
-              {filteredQuestions.map((question: any) => (
+              {questions.map((question: any) => (
                 <LeftHoView key={question.ID}>
                   <SquareButton
                     bgColor={theme.successColor}

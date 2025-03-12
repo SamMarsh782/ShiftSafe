@@ -100,7 +100,10 @@ const CheckDigitModal = ({
   ) => {
     if (checkDigit === user.Check_Digit) {
       setModalVisible(false);
-      router.push(`/equipment`);
+      router.replace({
+        pathname: "./equipment",
+        params: {userId: user.ID}
+      });
     } else {
       Alert.alert('Incorrect Check Digit', 'Please try again.', [
         { text: 'OK', onPress: () => reloadDigits() },
