@@ -1,0 +1,26 @@
+Startup -> 
+-Device
+	-company
+	-warehouse
+	-Mounted
+-(From company and warehouse)
+	-settings table
+		-company name
+		-warehouse name
+		-colors
+		-logo
+
+Device table
+-ID, mount, company, location, assetID, user
+
+Flow
+Login(skip if user exists in device table)->main/home->Asset
+
+User table
+-user, checkDigit, last login
+
+Asset page
+-only show what the user has access to
+
+User/Asset table
+-user, asset, date, y/n

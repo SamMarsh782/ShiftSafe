@@ -1,21 +1,29 @@
-import { ScrollView } from 'react-native';
-
+import React from 'react';
+import { ScrollView, ScrollViewProps } from 'react-native';
 import styled from 'styled-components';
+import { useTheme } from '@/contexts/themeContext';
 
-import { colors } from '../../assets/colors';
-
-interface StyledScrollViewProps {
-    width?: string;
-    height?: string;
+interface StyledScrollViewProps extends ScrollViewProps {
+  width?: string;
+  height?: string;
+  bgColor?: string;
 }
 
-export const StyledScrollView = styled(ScrollView).attrs({
+const StyledScrollViewComponent: React.FC<StyledScrollViewProps> = ({ width, height, bgColor, ...props }) => {
+  const { theme } = useTheme();
+
+  const StyledScrollView = styled(ScrollView).attrs({
     contentContainerStyle: {
       alignItems: 'center',
     },
   })`
-    background-color: ${colors.canvasBrown};
+    background-color: ${bgColor ? bgColor : theme.secondaryColor};
     flex: 1;
-    width: ${(props) => (props as StyledScrollViewProps).width || '100%'};
-    height: ${(props) => (props as StyledScrollViewProps).height || '100%'};
+    width: ${width || '100%'};
+    height: ${height || '100%'};
   `;
+
+  return <StyledScrollView {...props} />;
+};
+
+export default StyledScrollViewComponent;

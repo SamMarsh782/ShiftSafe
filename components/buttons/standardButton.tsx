@@ -1,13 +1,14 @@
 /* Modules */
-import React, {useState, useEffect} from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 
 /* Styles */
-import {colors} from '../../assets/colors';
+import { useTheme } from '@/contexts/themeContext';
 
 type TextProps = {
   $textColor?: string;
+  disabled?: boolean;
 };
 
 const ButtonText = styled(Text)<TextProps>`
@@ -15,25 +16,26 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${props => props.$textColor || colors.white};
+  color: ${(props: TextProps & { theme: any }) => props.$textColor || props.theme.blankSpace};
 `;
 
 type ButtonContainerProps = {
   $bgColor?: string;
   $width?: string;
+  disabled?: boolean;
 };
 
 const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
-  background-color: ${props => props.$bgColor || colors.buttonColor};
+  background-color: ${(props: ButtonContainerProps & { theme: any }) => props.$bgColor || props.theme.primaryColor};
   height: 50px;
-  width: ${props => props.$width || '80%'};
+  width: ${(props: ButtonContainerProps & { theme: any }) => props.$width || '80%'};
   display: flex;
   margin: 10px;
   border-radius: 20px;
   align-items: center;
   justify-content: center;
   align-self: center;
-  opacity: ${props => (props.disabled ? 0.5 : 1)};
+  opacity: ${(props: ButtonContainerProps & { theme: any }) => (props.disabled ? 0.5 : 1)};
 `;
 
 type PressableButtonProps = {
@@ -46,7 +48,7 @@ type PressableButtonProps = {
   disabledTime?: number;
 };
 
-const StandardButton = ({
+const StandardButton: React.FC<PressableButtonProps> = ({
   onPress,
   title,
   bgColor,
@@ -55,7 +57,8 @@ const StandardButton = ({
   disabled,
   disabledTime = 0,
   ...rest
-}: PressableButtonProps) => {
+}) => {
+  const { theme } = useTheme(); // Use the useTheme hook
   const [remainingTime, setRemainingTime] = useState(disabledTime);
   const [isButtonDisabled, setIsButtonDisabled] = useState(disabled);
 
@@ -65,7 +68,7 @@ const StandardButton = ({
     if (disabledTime > 0) {
       setIsButtonDisabled(true);
       intervalId = setInterval(() => {
-        setRemainingTime(prevTime => {
+        setRemainingTime((prevTime) => {
           if (prevTime <= 1) {
             clearInterval(intervalId);
             setIsButtonDisabled(false);
@@ -84,14 +87,14 @@ const StandardButton = ({
   }, [disabledTime]);
 
   return (
-    // @ts-ignore
     <ButtonContainer
       onPress={onPress}
-      $bgColor={bgColor}
+      $bgColor={bgColor || theme.primaryColor}
       $width={width}
       disabled={isButtonDisabled}
-      {...rest}>
-      <ButtonText $textColor={textColor}>
+      {...rest}
+    >
+      <ButtonText $textColor={textColor || theme.blankSpace}>
         {remainingTime > 0 ? remainingTime : title}
       </ButtonText>
     </ButtonContainer>

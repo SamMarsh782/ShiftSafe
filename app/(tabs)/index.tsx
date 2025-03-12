@@ -3,15 +3,17 @@ import { Text, SafeAreaView, BackHandler } from 'react-native';
 import { router } from 'expo-router';
 
 import { postImage } from '@/utils/apis/getObject';
+import { getUsers } from '@/utils/apis/getUsers';
 
 import { RootStackParamList } from '@/types/rootStackParamList';
 
-import { ScrollBGView } from '@/components/views/scrollBGView';
-import { WideContainer } from '@/components/views/wideContainer';
+import ScrollBGView from '@/components/views/scrollBGView';
+import WideContainer from '@/components/views/wideContainer';
 import ListButton from '@/components/buttons/listButton';
-import { NavBar } from '@/components/views/navBar';
+import NavBar from '@/components/views/navBar';
 import CheckDigitModal from '@/components/modals/checkDigitModal';
 import StandardButton from '@/components/buttons/standardButton';
+import { User } from '@/types/user';
 
 export default function Login() {
   
@@ -30,44 +32,25 @@ export default function Login() {
     setCheckDigits(digits);
   };
 
+  const [userData, setUserData] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
   useEffect(() => {
+    getUsers().then(users => {
+      setUserData(users);
+      setSelectedUser(users[0]);
+    }).catch(error => {
+      console.error('Error fetching users:', error.message);
+    });
     generateCheckDigits();
   }, []);
-
-  const [userData, setUserData] = useState([
-    {
-      "ID": 11111,
-      "User": "Sam Marshall",
-      "Check_Digit": 55
-    },
-    {
-      "ID": 22222,
-      "User": "Matt Lovell",
-      "Check_Digit": 44
-    },
-    {
-      "ID": 33333,
-      "User": "Dave Eichler",
-      "Check_Digit": 33
-    },
-    {
-      "ID": 44444,
-      "User": "Jake Thompson",
-      "Check_Digit": 22
-    },
-    {
-      "ID": 55555,
-      "User": "Brandon Stanley",
-      "Check_Digit": 11
-    }
-  ]);
 
   const handleSelectItem = (itm: any) => {
     setCDModalVisible(true);
     setSelectedUser(itm);
   };
 
-  const [selectedUser, setSelectedUser] = useState(userData[0]);
+
   const [selectedEquipment, setSelectedEquipment] = useState(null);
 
   /*useEffect(() => {
@@ -93,7 +76,7 @@ export default function Login() {
         >
         </StandardButton>
       </NavBar>
-      {cdModalVisible ? (
+      {cdModalVisible && selectedUser ? (
         <CheckDigitModal
           user={selectedUser}
           modalVisible={cdModalVisible}

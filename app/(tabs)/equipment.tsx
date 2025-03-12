@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, BackHandler } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import { postImage } from '@/utils/apis/getObject';
-
-import { RootStackParamList } from '@/types/rootStackParamList';
-
-import { ScrollBGView } from '@/components/views/scrollBGView';
+import ScrollBGView from '@/components/views/scrollBGView';
 import ListButton from '@/components/buttons/listButton';
-import { NavBar } from '@/components/views/navBar';
+import NavBar from '@/components/views/navBar';
 import QuestionsModal from '@/components/modals/questionsModal';
 import StandardButton from '@/components/buttons/standardButton';
 import { router } from 'expo-router';

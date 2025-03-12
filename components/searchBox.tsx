@@ -7,16 +7,15 @@ import {
   KeyboardTypeOptions,
 } from 'react-native';
 import styled from 'styled-components';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { colors } from '../assets/colors';
+import { useTheme } from '@/contexts/themeContext';
 
 const RowView = styled(View)`
   display: flex;
   flex-direction: row;
   flex-grow: 1;
   padding: 8px;
-  background-color: white;
+  background-color: ${(props) => props.theme.blankSpace};
   border-radius: 10px;
 `;
 
@@ -25,8 +24,8 @@ const StyledTextInput = styled(TextInput)`
   padding-vertical: 0;
 `;
 
-const StyledFieldText = styled(Text)`
-  color: ${colors.buttonColor};
+const StyledFieldText = styled(Text)<{ color: string }>`
+  color: ${(props) => props.color};
   text-align: left;
 `;
 
@@ -49,6 +48,8 @@ export default function SearchBox({
   onChangeText,
   value,
 }: InputFieldProps) {
+  const { theme } = useTheme();
+
   return (
     <RowView>
       {icon}
@@ -65,21 +66,15 @@ export default function SearchBox({
           onPress={() => {
             onChangeText('');
           }}>
-          <StyledFieldText>
-            <MaterialCommunityIcons
-              name="close"
-              color={colors.neutralGray}
-              size={20}
-            />
-          </StyledFieldText>
+          <StyledFieldText color={theme.primaryColor}>Clear</StyledFieldText>
         </TouchableOpacity>
       )}
 
       <TouchableOpacity
         onPress={() => {
-          fieldButtonFunction;
+          fieldButtonFunction && fieldButtonFunction();
         }}>
-        <StyledFieldText>{fieldButtonLabel}</StyledFieldText>
+        <StyledFieldText color={theme.primaryColor}>{fieldButtonLabel}</StyledFieldText>
       </TouchableOpacity>
     </RowView>
   );

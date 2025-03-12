@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Image } from 'react-native';
 import * as Device from 'expo-device';
 
-import { Field } from '@/components/views/field';
-import { WideContainer } from '@/components/views/wideContainer';
-import { ScrollBGView } from '@/components/views/scrollBGView';
+import Field from '@/components/views/field';
+import WideContainer from '@/components/views/wideContainer';
+import ScrollBGView from '@/components/views/scrollBGView';
 import StandardButton from '@/components/buttons/standardButton';
 import { getCurrentLocation } from '@/utils/tools/getLocation';
 import { LocationObject } from 'expo-location';
