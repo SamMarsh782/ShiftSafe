@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { ThemeProvider } from '@/contexts/themeContext';
+import { UserProvider } from '@/contexts/userContext';
+import { EquipmentProvider } from '@/contexts/equipmentContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -26,12 +28,16 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider> {/* Wrap your custom ThemeProvider */}
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+    <ThemeProvider>
+      <UserProvider>
+        <EquipmentProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </EquipmentProvider>
+      </UserProvider>
     </ThemeProvider>
   );
 }

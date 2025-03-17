@@ -9,7 +9,7 @@ interface StyledScrollViewProps extends ScrollViewProps {
   bgColor?: string;
 }
 
-const StyledScrollViewComponent: React.FC<StyledScrollViewProps> = ({ width, height, bgColor, ...props }) => {
+const ScrollBGView: React.FC<StyledScrollViewProps> = ({ width, height, bgColor, ...props }) => {
   const { theme } = useTheme();
 
   const StyledScrollView = styled(ScrollView).attrs({
@@ -26,4 +26,4 @@ const StyledScrollViewComponent: React.FC<StyledScrollViewProps> = ({ width, hei
   return <StyledScrollView {...props} />;
 };
 
-export default StyledScrollViewComponent;
+export default ScrollBGView;

@@ -1,9 +1,11 @@
 export class Equipment {
-    ID: number;
-    Equipment: string;
+    ID: number | null;
+    Name: string | null;
+    Type: string | null;
 
-    constructor(ID: number, Equipment: string) {
+    constructor(ID: number, Name: string, Type: string) {
         this.ID = ID;
-        this.Equipment = Equipment;
+        this.Name = Name;
+        this.Type = Type;
     }
 }

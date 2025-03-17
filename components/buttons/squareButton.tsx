@@ -16,7 +16,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${(props: TextProps & { theme: any }) => props.$textColor || props.theme.blankSpace};
+  color: ${(props: TextProps) => props.$textColor};
 `;
 
 type ButtonContainerProps = {
@@ -26,16 +26,16 @@ type ButtonContainerProps = {
 };
 
 const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
-  background-color: ${(props: ButtonContainerProps & { theme: any }) => props.$bgColor || props.theme.primaryColor};
-  height: ${(props: ButtonContainerProps & { theme: any }) => (props.$size ? props.$size : '50px')};
-  width: ${(props: ButtonContainerProps & { theme: any }) => (props.$size ? props.$size : '50px')};
+  background-color: ${(props: ButtonContainerProps) => props.$bgColor};
+  height: ${(props: ButtonContainerProps) => (props.$size ? props.$size : '50px')};
+  width: ${(props: ButtonContainerProps) => (props.$size ? props.$size : '50px')};
   display: flex;
   margin: 5px;
   border-radius: 5px;
   align-items: center;
   justify-content: center;
   align-self: center;
-  opacity: ${(props: ButtonContainerProps & { theme: any }) => (props.disabled ? 0.5 : 1)};
+  opacity: ${(props: ButtonContainerProps) => (props.disabled ? 0.5 : 1)};
 `;
 
 type PressableButtonProps = {

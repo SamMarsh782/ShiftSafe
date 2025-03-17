@@ -1,11 +1,11 @@
 export class Question {
-    ID: number;
-    Equipment: number;
-    Question: string;
+    ID: number | null;
+    Asset_ID: number | null;
+    Question: string | null;
 
-    constructor(ID: number, Equipment: number, Question: string) {
+    constructor(ID: number, Asset_ID: number, Question: string) {
         this.ID = ID;
-        this.Equipment = Equipment;
+        this.Asset_ID = Asset_ID;
         this.Question = Question;
     }
 }

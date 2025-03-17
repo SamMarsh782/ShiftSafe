@@ -6,14 +6,14 @@ import { useTheme } from '@/contexts/themeContext';
 import BackButton from '@/components/buttons/backButton';
 import MenuButton from '../buttons/menuButton';
 
-type navBarProps = {
+type headerProps = {
   title?: string;
 };
 
-const NavBarComponent: React.FC<React.PropsWithChildren<navBarProps>> = ({ children, title }) => {
+const HeaderComponent: React.FC<React.PropsWithChildren<headerProps>> = ({ children, title }) => {
   const { theme } = useTheme();
 
-  const NavBar = styled(View)`
+  const Header = styled(View)`
     background-color: ${theme.secondaryColor};
     height: 40px;
     width: 100%;
@@ -25,8 +25,6 @@ const NavBarComponent: React.FC<React.PropsWithChildren<navBarProps>> = ({ child
     padding-right: 10px;
   `;
 
-
-
   const Title = styled(Text)`
     color: ${theme.blankSpace};
     font-size: 20px;
@@ -34,13 +32,13 @@ const NavBarComponent: React.FC<React.PropsWithChildren<navBarProps>> = ({ child
   `;
 
   return (
-    <NavBar>
+    <Header>
       <BackButton />
         <Title>{title}</Title>
       {children}
       <MenuButton />
-    </NavBar>
+    </Header>
   );
 };
 
-export default NavBarComponent;
+export default HeaderComponent;

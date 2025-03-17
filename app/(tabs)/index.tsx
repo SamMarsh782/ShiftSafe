@@ -1,90 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Device from 'expo-device';
 import { router } from 'expo-router';
-
-import { getUsers } from '@/utils/apis/getUsers';
-import { getDeviceUser } from '@/utils/apis/getDeviceUser';
+import * as Device from 'expo-device';
 
 import ScrollBGView from '@/components/views/scrollBGView';
-import ListButton from '@/components/buttons/listButton';
-import NavBar from '@/components/views/navBar';
-import CheckDigitModal from '@/components/modals/checkDigitModal';
-import { User } from '@/types/user';
+import Header from '@/components/views/header';
 import BackgroundView from '@/components/views/backgroundView';
+import StandardButton from '@/components/buttons/standardButton';
 
 import { useTheme } from '@/contexts/themeContext';
-import { setParams } from 'expo-router/build/global-state/routing';
+import { useUser } from '@/contexts/userContext';
+import { useEquipment } from '@/contexts/equipmentContext';
 
-export default function Login() {
+import { getDevice } from '@/utils/apis/getDevice';
+import { getUserByID } from '@/utils/apis/getUserByID';
+import { getEquipByID } from '@/utils/apis/getEquipByID';
+
+export default function Menu() {
   const { theme } = useTheme();
-  const [deviceName, setDeviceName] = useState<string | null>(Device.deviceName);
-  useEffect(() => {
-    if (deviceName) {
-      getDeviceUser(deviceName).then(user => {
-        if (user) {
-          router.replace({
-            pathname: "./equipment",
-            params: {userId: user}
-          });
-        }
-      });
-    }
-  }, []);
-
-  const [cdModalVisible, setCDModalVisible] = useState(false);
-
-  const [checkDigits, setCheckDigits] = useState([0, 0, 0]);
-  const generateCheckDigits = () => {
-    const digits = [];
-    for (let i = 0; i < 3; i++) {
-      digits.push(Math.floor(Math.random() * 100));
-    }
-    setCheckDigits(digits);
-  };
-
-  const [userData, setUserData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUsers().then(users => {
-      setUserData(users);
-      setSelectedUser(users[0]);
-    }).catch(error => {
-      console.error('Error fetching users:', error.message);
-    });
-    generateCheckDigits();
-  }, []);
-
-  const handleSelectItem = (itm: any) => {
-    setCDModalVisible(true);
-    setSelectedUser(itm);
-  };
+  const { user, setUser } = useUser();
+    const { equipment, setEquipment } = useEquipment();
+    const [deviceName, setDeviceName] = useState<string | null>(Device.deviceName);
+  
+  
+    useEffect(() => {
+      if (deviceName) {
+        getDevice(deviceName).then(device => {
+          if (device.Owner) {
+            getUserByID(device.Owner).then(user => {
+              setUser(user);
+            });
+          } else {
+            router.replace({
+              pathname: "./users",
+            });
+          }
+          if (device.Mount) {
+            getEquipByID(device.Mount).then(equip => {
+              setEquipment(equip);
+            });
+          }
+        });
+      }
+    }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
-        <NavBar title='Select User'/>
-        {cdModalVisible && selectedUser ? (
-          <CheckDigitModal
-            user={selectedUser}
-            modalVisible={cdModalVisible}
-            setModalVisible={setCDModalVisible}
-            randomDigits={checkDigits}
-            generateRandomDigits={generateCheckDigits}
-          />
-        ) : null}
-        <ScrollBGView>
-          {userData
-            .sort((a, b) => a.User.localeCompare(b.User))
-            .map(user => (
-              <ListButton
-                key={user.ID}
-                title={`${user.User}`}
-                onPress={() => handleSelectItem(user)}
-              />
-            ))}
-        </ScrollBGView>
+        <Header title='Select A Task'/>
+          <ScrollBGView>
+            <StandardButton title='Change User' onPress={() => router.push('./users')}/>
+            <StandardButton title='Complete Pretrip' onPress={() => router.push('./equipment')}/>
+            <StandardButton title='Report Problem' onPress={() => router.push('./report')}/>
+            <StandardButton title='Log User' onPress={() => console.log(`User: ${JSON.stringify(user)}`)}/>
+            <StandardButton title='Log Equipment' onPress={() => console.log(`Equipment: ${JSON.stringify(equipment)}`)}/>
+          </ScrollBGView>
       </BackgroundView>
     </SafeAreaView>
   );

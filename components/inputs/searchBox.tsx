@@ -15,7 +15,6 @@ const RowView = styled(View)`
   flex-direction: row;
   flex-grow: 1;
   padding: 8px;
-  background-color: ${(props) => props.theme.blankSpace};
   border-radius: 10px;
 `;
 

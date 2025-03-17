@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, Text, View } from 'react-native';
 import styled from 'styled-components';
 import { router } from 'expo-router';
@@ -8,30 +8,31 @@ import StandardButton from '../buttons/standardButton';
 import StyledScrollView from '../views/styledScrollView';
 
 import { Equipment } from '../../types/equipment';
-import { RootStackParamList } from '@/types/rootStackParamList';
 
 import { useTheme } from '@/contexts/themeContext';
+import { useEquipment } from '@/contexts/equipmentContext';
 
 type ModalProps = {
-  equipment: Equipment;
+  selectedEquipment: Equipment;
+  setSelectedEquipment: (equipment: Equipment | null) => void;
   modalVisible: boolean;
   setModalVisible: (modalVisible: boolean) => void;
-  navigateToPage: (page: keyof RootStackParamList) => void;
   questions: any;
   newAnswers: any;
   setNewAnswers: (newAnswers: any) => void;
 };
 
 const QuestionsModal = ({
-  equipment,
+  selectedEquipment,
+  setSelectedEquipment,
   modalVisible,
   setModalVisible,
-  navigateToPage,
   questions,
   newAnswers,
   setNewAnswers,
 }: ModalProps) => {
   const { theme } = useTheme();
+  const { setEquipment } = useEquipment();
 
   const ModalView = styled(View)`
     background-color: ${theme.blankSpace};
@@ -97,13 +98,16 @@ const QuestionsModal = ({
     height: 60%;
   `;
 
-  function handleSubmitPress(setModalVisible: (modalVisible: boolean) => void) {
+  function handleSubmitPress(setModalVisible: (modalVisible: boolean) => void, setSelectedEquipment: (equipment: Equipment | null) => void) {
     setModalVisible(false);
-    router.push('./menu');
+    setEquipment(selectedEquipment);
+    router.push('./');
+    setSelectedEquipment(null);
   }
 
-  function handleCancelPress(setModalVisible: (modalVisible: boolean) => void) {
+  function handleCancelPress(setModalVisible: (modalVisible: boolean) => void, setSelectedEquipment: (equipment: Equipment | null) => void) {
     setModalVisible(false);
+    setSelectedEquipment(null);
   }
 
   function handleYesPress() {}
@@ -147,13 +151,13 @@ const QuestionsModal = ({
           <StandardButton
             bgColor={theme.successColor}
             textColor={theme.blankSpace}
-            onPress={() => handleSubmitPress(setModalVisible)}
+            onPress={() => handleSubmitPress(setModalVisible, setSelectedEquipment)}
             title="Submit"
           />
           <StandardButton
             bgColor={theme.dangerColor}
             textColor={theme.blankSpace}
-            onPress={() => handleCancelPress(setModalVisible)}
+            onPress={() => handleCancelPress(setModalVisible, setSelectedEquipment)}
             title="Cancel"
           />
         </ModalView>

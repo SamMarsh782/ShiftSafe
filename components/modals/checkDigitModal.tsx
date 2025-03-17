@@ -7,6 +7,8 @@ import SquareButton from '../buttons/squareButton';
 import StandardButton from '../buttons/standardButton';
 
 import { useTheme } from '@/contexts/themeContext';
+import { useUser } from '@/contexts/userContext';
+import { useEquipment } from '@/contexts/equipmentContext';
 
 import { User } from '../../types/user';
 
@@ -26,6 +28,8 @@ const CheckDigitModal = ({
   generateRandomDigits,
 }: ModalProps) => {
   const { theme } = useTheme();
+  const { setUser } = useUser();
+  const { setEquipment } = useEquipment();
   const [shuffledDigits, setShuffledDigits] = useState<number[]>([]);
 
   useEffect(() => {
@@ -33,7 +37,7 @@ const CheckDigitModal = ({
   }, [randomDigits]);
 
   const shuffleDigits = () => {
-    const digits = [...randomDigits, user.Check_Digit];
+    const digits = [...randomDigits, user.Check_Digit].filter((digit): digit is number => digit !== null);
     for (let i = digits.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [digits[i], digits[j]] = [digits[j], digits[i]];
@@ -100,8 +104,10 @@ const CheckDigitModal = ({
   ) => {
     if (checkDigit === user.Check_Digit) {
       setModalVisible(false);
+      setUser(user);
+      setEquipment({ID: null, Name: null, Type: null});
       router.replace({
-        pathname: "./equipment",
+        pathname: "./",
         params: {userId: user.ID}
       });
     } else {
@@ -116,7 +122,7 @@ const CheckDigitModal = ({
       <CenteredView>
         <ModalView>
           <ModalTitle>Select check digit for:</ModalTitle>
-          <ModalTitle>{user.User}</ModalTitle>
+          <ModalTitle>{user.First_Name} {user.Last_Name}</ModalTitle>
           <SpacedView>
             {shuffledDigits.map((digit, index) => (
               <SquareButton

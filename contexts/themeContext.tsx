@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 const lightTheme = {
+  version: 'light',
   primaryColor: '#485A72',
   secondaryColor: '#A9936D',
   tertiaryColor: '#99A96D',
@@ -14,6 +15,7 @@ const lightTheme = {
 };
 
 const darkTheme = {
+  version: 'dark',
   primaryColor: '#A9936D',
   secondaryColor: '#485A72',
   tertiaryColor: '#694872',

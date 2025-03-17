@@ -5,11 +5,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 
 import ScrollBGView from '@/components/views/scrollBGView';
 import ListButton from '@/components/buttons/listButton';
-import NavBar from '@/components/views/navBar';
+import Header from '@/components/views/header';
 import QuestionsModal from '@/components/modals/questionsModal';
 import BackgroundView from '@/components/views/backgroundView';
+import StandardButton from '@/components/buttons/standardButton';
 
 import { useTheme } from '@/contexts/themeContext';
+import { useUser } from '@/contexts/userContext';
+import { useEquipment } from '@/contexts/equipmentContext';
 
 import { Equipment } from '@/types/equipment';
 import { Question } from '@/types/question';
@@ -19,12 +22,8 @@ import { getQuestions } from '@/utils/apis/getQuestions';
 
 export default function EquipmentPage() {
   const { theme } = useTheme();
-
-  const navigateHome = () => {
-    router.replace({
-      pathname: "./",
-  });
-  };
+  const { user } = useUser();
+  const { equipment, setEquipment } = useEquipment();
 
   const [newAnswers, setNewAnswers] = useState([]);
 
@@ -32,24 +31,28 @@ export default function EquipmentPage() {
 
   const [equipmentData, setEquipmentData] = useState<Equipment[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
-  const { userId } = useLocalSearchParams();
-  const numericUserId = Array.isArray(userId) ? parseInt(userId[0], 10) : parseInt(userId, 10);
 
     useEffect(() => {
-      getEquipment(numericUserId).then(equips => {
-        setEquipmentData(equips);
-        setSelectedEquipment(equips[0]);
-      }).catch(error => {
-        console.error('Error fetching users:', error.message);
-      });
-    }, [userId]);
+      if (user) {
+        if (user.ID !== null) {
+          getEquipment(user.ID).then(equips => {
+            setEquipmentData(equips);
+          }).catch(error => {
+            console.error('Error fetching equipment:', error.message);
+          });
+        }
+      }
+    }, [user]);
 
   const [questionData, setQuestionData] = useState<Question[]>([]);
 
     useEffect(() => {
       if (selectedEquipment) {
-        getQuestions(selectedEquipment.ID).then(questions => {
+        getQuestions(selectedEquipment.ID!).then(questions => {
           setQuestionData(questions);
+          if(selectedEquipment) {
+            setQuestionsModalVisible(true);
+          }
         }).catch(error => {
           console.error('Error fetching users:', error.message);
         });
@@ -57,7 +60,6 @@ export default function EquipmentPage() {
     }, [selectedEquipment]);
 
   const handleSelectItem = (itm: any) => {
-    setQuestionsModalVisible(true);
     setSelectedEquipment(itm);
   };
 
@@ -67,29 +69,39 @@ export default function EquipmentPage() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
-        <NavBar title='Select Your Equipment' />
+        <Header title='Select Your Equipment' />
         {questionsModalVisible && selectedEquipment ? (
           <QuestionsModal
-            equipment={selectedEquipment}
+            selectedEquipment={selectedEquipment}
+            setSelectedEquipment={setSelectedEquipment}
             modalVisible={questionsModalVisible}
             setModalVisible={setQuestionsModalVisible}
-            navigateToPage={navigateHome}
             questions={questionData}
             newAnswers={newAnswers}
             setNewAnswers={setNewAnswers}
           />
         ) : null}
+        {user ? (
           <ScrollBGView>
             {equipmentData
-              .sort((a, b) => a.Equipment.localeCompare(b.Equipment))
+              .sort((a, b) => (a.Name || '').localeCompare(b.Name || ''))
               .map(eqpt => (
                 <ListButton
                   key={eqpt.ID}
-                  title={`${eqpt.Equipment}`}
+                  title={`${eqpt.Name} (${eqpt.Type})`}
                   onPress={() => handleSelectItem(eqpt)}
                 />
               ))}
+            <StandardButton title='Cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
           </ScrollBGView>
+        ) : (
+          <ScrollBGView>
+            <Text style={{  textAlign: 'center', marginTop: 20 }}>
+              No user selected. Please select a user first.
+            </Text>
+            <StandardButton title='Go Back' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+          </ScrollBGView>
+        )}
       </BackgroundView>
     </SafeAreaView>
   );

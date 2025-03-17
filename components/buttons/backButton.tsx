@@ -13,7 +13,6 @@ const routeBack = () => {
   } else {
     router.replace('/');
   }
-  
 }
 
 type TextProps = {
@@ -25,7 +24,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${(props: TextProps & { theme: any }) => props.$textColor || props.theme.blankSpace};
+  color: ${(props: TextProps) => props.$textColor};
 `;
 
 type ButtonContainerProps = {
@@ -33,14 +32,14 @@ type ButtonContainerProps = {
 };
 
 const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
-  background-color: ${(props: ButtonContainerProps & { theme: any }) => props.$bgColor || props.theme.primaryColor};
+  background-color: ${(props: ButtonContainerProps) => props.$bgColor};
   height: 30px;
   width: 30px;
   display: flex;
   border-radius: 30px;
   align-items: center;
   justify-content: center;
-  align-self: center;;
+  align-self: center;
 `;
 
 type PressableButtonProps = {

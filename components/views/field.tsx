@@ -15,23 +15,22 @@ const Field: React.FC<{ label: string; value: string }> = ({ label, value }) => 
 
   const LabelFieldView = styled(View)`
     justify-content: flex-start;
-    width: 30%;
+    flex: 0 1 auto;
   `;
 
   const ValueFieldView = styled(View)`
     justify-content: flex-start;
-    width: 70%;
+    flex: 1;
   `;
 
   const SectionText = styled(Text)`
-    color: ${theme.successColor};
+    color: ${theme.primaryColor};
     font-size: 18px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0 10px 5px;
   `;
 
   const LabelText = styled(SectionText)`
-    color: ${theme.primaryColor};
+    color: ${theme.secondaryColor};
   `;
 
   return (

@@ -16,7 +16,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${(props: TextProps & { theme: any }) => props.$textColor || props.theme.blankSpace};
+  color: ${(props: TextProps) => props.$textColor};
 `;
 
 type ButtonContainerProps = {
@@ -24,7 +24,7 @@ type ButtonContainerProps = {
 };
 
 const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
-  background-color: ${(props: ButtonContainerProps & { theme: any }) => props.$bgColor || props.theme.primaryColor};
+  background-color: ${(props: ButtonContainerProps) => props.$bgColor};
   height: 30px;
   width: 30px;
   display: flex;
@@ -48,7 +48,7 @@ const MenuButton: React.FC<PressableButtonProps> = ({
 
   return (
     <ButtonContainer
-      onPress={() => toggleTheme()}
+      onPress={/* () => toggleTheme()*/ () => router.push('/settings')}
       $bgColor={bgColor || theme.secondaryColor}
       {...rest}
     >
