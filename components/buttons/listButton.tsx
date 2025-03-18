@@ -37,7 +37,7 @@ const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
   opacity: ${(props: ButtonContainerProps & { theme: any }) => (props.disabled ? 0.5 : 1)};
 `;
 
-type PressableButtonProps = {
+interface PressableButtonProps {
   onPress: () => void;
   title: string;
   bgColor?: string;

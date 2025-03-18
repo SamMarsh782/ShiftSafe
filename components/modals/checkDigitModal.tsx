@@ -122,7 +122,7 @@ const CheckDigitModal = ({
       <CenteredView>
         <ModalView>
           <ModalTitle>Select check digit for:</ModalTitle>
-          <ModalTitle>{user.First_Name} {user.Last_Name}</ModalTitle>
+          <ModalTitle>{user.Name}</ModalTitle>
           <SpacedView>
             {shuffledDigits.map((digit, index) => (
               <SquareButton

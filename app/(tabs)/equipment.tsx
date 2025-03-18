@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Text, BackHandler } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import ScrollBGView from '@/components/views/scrollBGView';
-import ListButton from '@/components/buttons/listButton';
+import ButtonList from '@/components/buttons/buttonList';
 import Header from '@/components/views/header';
 import QuestionsModal from '@/components/modals/questionsModal';
 import BackgroundView from '@/components/views/backgroundView';
 import StandardButton from '@/components/buttons/standardButton';
+import SearchBar from '@/components/inputs/searchBar';
 
 import { useTheme } from '@/contexts/themeContext';
 import { useUser } from '@/contexts/userContext';
@@ -24,6 +26,7 @@ export default function EquipmentPage() {
   const { theme } = useTheme();
   const { user } = useUser();
   const { equipment, setEquipment } = useEquipment();
+  const [searchText, setSearchText] = useState('');
 
   const [newAnswers, setNewAnswers] = useState([]);
 
@@ -70,6 +73,12 @@ export default function EquipmentPage() {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
         <Header title='Select Your Equipment' />
+        <SearchBar
+          initialValue={searchText}
+          setSearchText={setSearchText}
+          label='Search Equipment'
+          icon={<Icon name="search" size={20} color={theme.primaryColor} />}
+        />
         {questionsModalVisible && selectedEquipment ? (
           <QuestionsModal
             selectedEquipment={selectedEquipment}
@@ -82,18 +91,13 @@ export default function EquipmentPage() {
           />
         ) : null}
         {user ? (
-          <ScrollBGView>
-            {equipmentData
-              .sort((a, b) => (a.Name || '').localeCompare(b.Name || ''))
-              .map(eqpt => (
-                <ListButton
-                  key={eqpt.ID}
-                  title={`${eqpt.Name} (${eqpt.Type})`}
-                  onPress={() => handleSelectItem(eqpt)}
-                />
-              ))}
+          <ButtonList
+            items={equipmentData}
+            filter={''}
+            onPress={handleSelectItem}
+          >
             <StandardButton title='Cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
-          </ScrollBGView>
+          </ButtonList>
         ) : (
           <ScrollBGView>
             <Text style={{  textAlign: 'center', marginTop: 20 }}>

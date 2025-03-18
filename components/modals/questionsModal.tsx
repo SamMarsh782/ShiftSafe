@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Text, View } from 'react-native';
 import styled from 'styled-components';
 import { router } from 'expo-router';
@@ -11,6 +11,8 @@ import { Equipment } from '../../types/equipment';
 
 import { useTheme } from '@/contexts/themeContext';
 import { useEquipment } from '@/contexts/equipmentContext';
+import { useUser } from '@/contexts/userContext';
+import { submitPretrip } from '@/utils/apis/submitPretrip';
 
 type ModalProps = {
   selectedEquipment: Equipment;
@@ -33,6 +35,9 @@ const QuestionsModal = ({
 }: ModalProps) => {
   const { theme } = useTheme();
   const { setEquipment } = useEquipment();
+  const { user } = useUser();
+
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
 
   const ModalView = styled(View)`
     background-color: ${theme.blankSpace};
@@ -49,7 +54,6 @@ const QuestionsModal = ({
     shadow-radius: 4px;
     outline: 0;
     elevation: 5;
-
   `;
 
   const CenteredView = styled(View)`
@@ -98,7 +102,41 @@ const QuestionsModal = ({
     height: 60%;
   `;
 
+  function handleYesPress(questionId: number) {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: 'Yes',
+    }));
+  }
+
+  function handleNoPress(questionId: number) {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: 'No',
+    }));
+  }
+
   function handleSubmitPress(setModalVisible: (modalVisible: boolean) => void, setSelectedEquipment: (equipment: Equipment | null) => void) {
+    const answersArray = questions.map((question: any) => {
+      return {
+        User_ID: user?.ID,
+        Asset_ID: selectedEquipment.ID,
+        Question_ID: question.ID,
+        Answer: answers[question.ID] || 'Unanswered',
+        Time_Submitted: new Date().toISOString(),
+      };
+    });
+    console.log('Submitting answers:', answersArray);
+    submitPretrip(answersArray).then((response) => {
+      if (response) {
+        console.log('Pretrip submitted successfully:', response);
+      } else {
+        console.error('Failed to submit pretrip:', response);
+      }
+    }).catch((error) => {
+      console.error('Error submitting pretrip:', error);
+    });
+
     setModalVisible(false);
     setEquipment(selectedEquipment);
     router.push('./');
@@ -109,10 +147,6 @@ const QuestionsModal = ({
     setModalVisible(false);
     setSelectedEquipment(null);
   }
-
-  function handleYesPress() {}
-
-  function handleNoPress() {}
 
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -130,14 +164,14 @@ const QuestionsModal = ({
                   <SquareButton
                     bgColor={theme.successColor}
                     textColor={theme.blankSpace}
-                    onPress={() => handleYesPress()}
+                    onPress={() => handleYesPress(question.ID)}
                     title="Yes"
                     size="40px"
                   />
                   <SquareButton
                     bgColor={theme.dangerColor}
                     textColor={theme.blankSpace}
-                    onPress={() => handleNoPress()}
+                    onPress={() => handleNoPress(question.ID)}
                     title="No"
                     size="40px"
                   />

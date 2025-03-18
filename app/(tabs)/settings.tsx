@@ -68,7 +68,7 @@ const Profile = () => {
             <SectionTitleText>Info</SectionTitleText>
             <Field
               label="User:"
-              value={`${user?.First_Name ?? ''} ${user?.Last_Name ?? ''}`}
+              value={user?.Name ?? ''}
             />
             <Field
               label="Asset:"
