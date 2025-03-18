@@ -162,18 +162,28 @@ const QuestionsModal = ({
               {questions.map((question: any) => (
                 <LeftHoView key={question.ID}>
                   <SquareButton
-                    bgColor={theme.successColor}
+                    bgColor={
+                      answers[question.ID] === 'Yes'
+                        ? theme.neutralGray
+                        : theme.successColor
+                    }
                     textColor={theme.blankSpace}
                     onPress={() => handleYesPress(question.ID)}
                     title="Yes"
                     size="40px"
+                    disabled={answers[question.ID] === 'Yes'}
                   />
                   <SquareButton
-                    bgColor={theme.dangerColor}
+                    bgColor={
+                      answers[question.ID] === 'No'
+                        ? theme.neutralGray
+                        : theme.dangerColor
+                    }
                     textColor={theme.blankSpace}
                     onPress={() => handleNoPress(question.ID)}
                     title="No"
                     size="40px"
+                    disabled={answers[question.ID] === 'No'}
                   />
                   <QuestionTextContainer>
                     <QuestionText>{question.Question}</QuestionText>
