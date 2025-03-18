@@ -100,7 +100,7 @@ export default function EquipmentPage() {
           </ButtonList>
         ) : (
           <ScrollBGView>
-            <Text style={{  textAlign: 'center', marginTop: 20 }}>
+            <Text style={{  textAlign: 'center', marginTop: 20, color: theme.inverseBlankSpace}}>
               No user selected. Please select a user first.
             </Text>
             <StandardButton title='Go Back' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>

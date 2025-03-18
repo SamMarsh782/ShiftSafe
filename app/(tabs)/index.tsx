@@ -20,7 +20,7 @@ export default function Menu() {
   const { theme } = useTheme();
   const { user, setUser } = useUser();
     const { equipment, setEquipment } = useEquipment();
-    const [deviceName, setDeviceName] = useState<string | null>(Device.deviceName);
+    const [deviceName] = useState<string | null>(Device.deviceName);
   
   
     useEffect(() => {
@@ -52,8 +52,6 @@ export default function Menu() {
             <StandardButton title='Change User' onPress={() => router.push('./users')}/>
             <StandardButton title='Complete Pretrip' onPress={() => router.push('./equipment')}/>
             <StandardButton title='Report Problem' onPress={() => router.push('./report')}/>
-            <StandardButton title='Log User' onPress={() => console.log(`User: ${JSON.stringify(user)}`)}/>
-            <StandardButton title='Log Equipment' onPress={() => console.log(`Equipment: ${JSON.stringify(equipment)}`)}/>
           </ScrollBGView>
       </BackgroundView>
     </SafeAreaView>

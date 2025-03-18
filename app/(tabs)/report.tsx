@@ -102,7 +102,7 @@ export default function Report() {
           {selectedImage ? (
             <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
           ) : (
-            <Image source={require('@/assets/images/testIcon.png')} style={{ width: 200, height: 200 }} />
+            null
           )}
         </View>
         {selectedImage && (

@@ -37,7 +37,7 @@ const QuestionsModal = ({
   const { setEquipment } = useEquipment();
   const { user } = useUser();
 
-  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [answers, setAnswers] = useState<string[]>([]);
 
   const ModalView = styled(View)`
     background-color: ${theme.blankSpace};
@@ -102,44 +102,52 @@ const QuestionsModal = ({
     height: 60%;
   `;
 
-  function handleYesPress(questionId: number) {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questionId]: 'Yes',
-    }));
+  function handleYesPress(index: number) {
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[index] = 'Yes';
+      return updatedAnswers;
+    });
+  }
+  
+  function handleNoPress(index: number) {
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[index] = 'No';
+      return updatedAnswers;
+    });
   }
 
-  function handleNoPress(questionId: number) {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questionId]: 'No',
-    }));
+  function allQuestionsAnswered(answers: string[]) {
+    return answers.length === questions.length && answers.every((answer) => answer !== undefined);
+  }
+
+  function problemIndicated(answers: string[]) {
+    return answers.some((answer) => answer === 'No');
   }
 
   function handleSubmitPress(setModalVisible: (modalVisible: boolean) => void, setSelectedEquipment: (equipment: Equipment | null) => void) {
-    const answersArray = questions.map((question: any) => {
-      return {
-        User_ID: user?.ID,
-        Asset_ID: selectedEquipment.ID,
-        Question_ID: question.ID,
-        Answer: answers[question.ID] || 'Unanswered',
-        Time_Submitted: new Date().toISOString(),
-      };
-    });
-    console.log('Submitting answers:', answersArray);
-    submitPretrip(answersArray).then((response) => {
-      if (response) {
-        console.log('Pretrip submitted successfully:', response);
-      } else {
-        console.error('Failed to submit pretrip:', response);
-      }
-    }).catch((error) => {
-      console.error('Error submitting pretrip:', error);
-    });
-
+    if (!allQuestionsAnswered(answers)) {
+      alert('Please answer all questions before submitting.');
+      return;
+    }
+  
+    const answersArray = questions.map((question: any, index: number) => ({
+      User_ID: user?.ID,
+      Asset_ID: selectedEquipment.ID,
+      Question_ID: question.ID,
+      Answer: answers[index] || 'Unanswered',
+      Time_Submitted: new Date().toISOString(),
+    }));
+    submitPretrip(answersArray);
+    if(problemIndicated(answers)) {
+      alert('Problem indicated. Please provide a picture of the issue and a description.');
+      router.push('./report');
+    } else {
+      setEquipment(selectedEquipment);
+      router.push('./');
+    }
     setModalVisible(false);
-    setEquipment(selectedEquipment);
-    router.push('./');
     setSelectedEquipment(null);
   }
 
@@ -159,31 +167,31 @@ const QuestionsModal = ({
               height='60%'
               bgColor={theme.blankSpace}
             >
-              {questions.map((question: any) => (
-                <LeftHoView key={question.ID}>
+              {questions.map((question: any, index: number) => (
+                <LeftHoView key={index}>
                   <SquareButton
                     bgColor={
-                      answers[question.ID] === 'Yes'
+                      answers[index] === 'Yes'
                         ? theme.neutralGray
                         : theme.successColor
                     }
                     textColor={theme.blankSpace}
-                    onPress={() => handleYesPress(question.ID)}
+                    onPress={() => handleYesPress(index)}
                     title="Yes"
                     size="40px"
-                    disabled={answers[question.ID] === 'Yes'}
+                    disabled={answers[index] === 'Yes'}
                   />
                   <SquareButton
                     bgColor={
-                      answers[question.ID] === 'No'
+                      answers[index] === 'No'
                         ? theme.neutralGray
                         : theme.dangerColor
                     }
                     textColor={theme.blankSpace}
-                    onPress={() => handleNoPress(question.ID)}
+                    onPress={() => handleNoPress(index)}
                     title="No"
                     size="40px"
-                    disabled={answers[question.ID] === 'No'}
+                    disabled={answers[index] === 'No'}
                   />
                   <QuestionTextContainer>
                     <QuestionText>{question.Question}</QuestionText>
