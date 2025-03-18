@@ -30,6 +30,38 @@ const Settings = () => {
     text-align: left;
   `;
 
+  useEffect(() => {
+    const loadThemeSetting = async () => {
+      const savedThemeOption = await AsyncStorage.getItem('themeOption');
+      if (savedThemeOption) {
+        setThemeOption(savedThemeOption);
+      }
+    };
+    loadThemeSetting();
+  }, []);
+
+  useEffect(() => {
+    const saveThemeSetting = async () => {
+      await AsyncStorage.setItem('themeOption', themeOption);
+    };
+    saveThemeSetting();
+
+    if (themeOption === 'auto') {
+      const hour = new Date().getHours();
+      if (hour >= 18 || hour < 6) {
+        if (theme.version !== 'dark') {
+          toggleTheme();
+        }
+      } else if (theme.version !== 'light') {
+        toggleTheme();
+      }
+    } else if (themeOption === 'light' && theme.version !== 'light') {
+      toggleTheme();
+    } else if (themeOption === 'dark' && theme.version !== 'dark') {
+      toggleTheme();
+    }
+  }, [themeOption]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
