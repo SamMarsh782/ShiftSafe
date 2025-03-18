@@ -28,9 +28,10 @@ const RowView = styled(View)<{ bgColor: string }>`
   background-color: ${(props) => props.bgColor};
 `;
 
-const StyledTextInput = styled(TextInput)`
+const StyledTextInput = styled(TextInput)<{ color: string }>`
   flex: 1;
   padding-vertical: 0;
+  color: ${(props) => props.color};
 `;
 
 const StyledFieldText = styled(Text)<{ color: string }>`
@@ -66,18 +67,20 @@ const SearchBar = ({
         <StyledTextInput
           autoCapitalize="none"
           placeholder={label}
+          placeholderTextColor={theme.inverseBlankSpace}
           keyboardType={keyboardType}
           value={text}
           onChangeText={setText}
           onSubmitEditing={() => {
             setSearchText(text);
           }}
+          color={theme.inverseBlankSpace}
         />
         <TouchableOpacity
           onPress={() => {
             setSearchText('');
           }}>
-          <StyledFieldText color={theme.primaryColor}>Clear</StyledFieldText>
+          <StyledFieldText color={theme.inverseBlankSpace}>Clear</StyledFieldText>
         </TouchableOpacity>
       </RowView>
     </Container>

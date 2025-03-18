@@ -10,6 +10,7 @@ const lightTheme = {
   neutralGray: '#DDE4E8',
   darkGray: '#7D8488',
   blankSpace: '#FFFFFF',
+  inverseBlankSpace: '#000000',
   dangerColor: '#FF0000',
   textColor: '#000000',
 };
@@ -24,6 +25,7 @@ const darkTheme = {
   neutralGray: '#B0BEC5',
   darkGray: '#263238',
   blankSpace: '#000000',
+  inverseBlankSpace: '#FFFFFF',
   dangerColor: '#D32F2F',
   textColor: '#FFFFFF',
 };

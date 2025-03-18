@@ -143,7 +143,7 @@ const CheckDigitModal = ({
             ))}
           </SpacedView>
           <StandardButton
-            bgColor={theme.tertiaryColor}
+            bgColor={theme.dangerColor}
             textColor={theme.blankSpace}
             onPress={() => handleCancelPress(setModalVisible, generateRandomDigits)}
             title="Cancel"

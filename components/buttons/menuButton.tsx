@@ -1,10 +1,8 @@
-/* Modules */
 import React, { useState, useEffect } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import { router } from 'expo-router';
 
-/* Styles */
 import { useTheme } from '@/contexts/themeContext';
 
 type TextProps = {
@@ -48,7 +46,7 @@ const MenuButton: React.FC<PressableButtonProps> = ({
 
   return (
     <ButtonContainer
-      onPress={/* () => toggleTheme()*/ () => router.push('/settings')}
+      onPress={() => router.push('/settings')}
       $bgColor={bgColor || theme.secondaryColor}
       {...rest}
     >

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { router } from 'expo-router';
 
 import { getUsers } from '@/utils/apis/getUsers';
 
@@ -12,6 +13,7 @@ import SearchBar from '@/components/inputs/searchBar';
 import ButtonList from '@/components/buttons/buttonList';
 
 import { useTheme } from '@/contexts/themeContext';
+import StandardButton from '@/components/buttons/standardButton';
 
 export default function Login() {
   const { theme, toggleTheme } = useTheme();
@@ -79,7 +81,9 @@ export default function Login() {
           items={userData}
           filter={searchText}
           onPress={handleSelectItem}
-        />
+        >
+          <StandardButton title='cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+        </ButtonList>
       </BackgroundView>
     </SafeAreaView>
   );

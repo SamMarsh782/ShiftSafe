@@ -1,10 +1,8 @@
-/* Modules */
 import React, { useState, useEffect } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import { router } from 'expo-router';
 
-/* Styles */
 import { useTheme } from '@/contexts/themeContext';
 
 const routeBack = () => {
