@@ -42,17 +42,6 @@ export default function Login() {
     generateCheckDigits();
   }, []);
 
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour >= 18 || hour < 6) {
-      if (theme.version !== 'dark') {
-        toggleTheme();
-      }
-    } else if (theme.version !== 'light') {
-      toggleTheme();
-    }
-  }, []);
-
   const handleSelectItem = (itm: any) => {
     setCDModalVisible(true);
     setSelectedUser(itm);

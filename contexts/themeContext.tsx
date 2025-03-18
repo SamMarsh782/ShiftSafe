@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const lightTheme = {
   version: 'light',
@@ -32,19 +33,56 @@ const darkTheme = {
 
 const ThemeContext = createContext({
   theme: lightTheme,
-  setTheme: (theme: typeof lightTheme) => {},
+  themeOption: 'auto',
+  setThemeOption: (option: string) => {},
   toggleTheme: () => {},
 });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState(lightTheme);
+  const [themeOption, setThemeOption] = useState('auto');
+
+  useEffect(() => {
+    const loadThemeOption = async () => {
+      const savedThemeOption = await AsyncStorage.getItem('themeOption');
+      if (savedThemeOption) {
+        setThemeOption(savedThemeOption);
+        applyTheme(savedThemeOption);
+      }
+    };
+    loadThemeOption();
+  }, []);
+
+  useEffect(() => {
+    const saveThemeOption = async () => {
+      await AsyncStorage.setItem('themeOption', themeOption);
+    };
+    saveThemeOption();
+  }, [themeOption]);
+
+  const applyTheme = (option: string) => {
+    if (option === 'auto') {
+      const hour = new Date().getHours();
+      if (hour >= 18 || hour < 6) {
+        setTheme(darkTheme);
+      } else {
+        setTheme(lightTheme);
+      }
+    } else if (option === 'light') {
+      setTheme(lightTheme);
+    } else if (option === 'dark') {
+      setTheme(darkTheme);
+    }
+  };
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === lightTheme ? darkTheme : lightTheme));
+    const newTheme = theme.version === 'light' ? 'dark' : 'light';
+    setThemeOption(newTheme);
+    applyTheme(newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, themeOption, setThemeOption, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

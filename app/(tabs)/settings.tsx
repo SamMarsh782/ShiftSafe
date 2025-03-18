@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import styled from 'styled-components';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import BackButton from '@/components/buttons/backButton';
 import Field from '@/components/views/field';
 import WideContainer from '@/components/views/wideContainer';
 import ScrollBGViewComponent from '@/components/views/scrollBGView';
@@ -15,42 +15,23 @@ import { useTheme } from '@/contexts/themeContext';
 import { useUser } from '@/contexts/userContext';
 import { useEquipment } from '@/contexts/equipmentContext';
 
-const Profile = () => {
-  const [themeOption, setThemeOption] = useState('auto');
+const Settings = () => {
 
   const { user } = useUser();
   const { equipment } = useEquipment();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, themeOption, setThemeOption } = useTheme();
 
   const SectionTitleText = styled(Text)`
-  font-size: 24px;
-  color: ${theme.primaryColor};
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-weight: bold;
-  text-align: left;
-`;
-
-  useEffect(() => {
-    if (themeOption === 'auto') {
-      const hour = new Date().getHours();
-      if (hour >= 18 || hour < 6) {
-        if (theme.version !== 'dark') {
-          toggleTheme();
-        }
-      }
-      else if (theme.version !== 'light') {
-        toggleTheme();
-      }
-    } else if (themeOption === 'light' && theme.version !== 'light') {
-      toggleTheme();
-    } else if (themeOption === 'dark' && theme.version !== 'dark') {
-      toggleTheme();
-    }
-   }, [themeOption]);
+    font-size: 24px;
+    color: ${theme.primaryColor};
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: left;
+  `;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
         <ScrollBGViewComponent>
           <Header />
@@ -66,10 +47,7 @@ const Profile = () => {
           <SectionTitleText>Settings</SectionTitleText>
           <WideContainer>
             <SectionTitleText>Info</SectionTitleText>
-            <Field
-              label="User:"
-              value={user?.Name ?? ''}
-            />
+            <Field label="User:" value={user?.Name ?? ''} />
             <Field
               label="Asset:"
               value={`${equipment?.Name ?? ''} ${equipment?.Type ?? ''}`}
@@ -93,4 +71,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Settings;
