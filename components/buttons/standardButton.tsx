@@ -56,7 +56,7 @@ const StandardButton: React.FC<PressableButtonProps> = ({
   disabledTime = 0,
   ...rest
 }) => {
-  const { theme } = useTheme(); // Use the useTheme hook
+  const { theme } = useTheme();
   const [remainingTime, setRemainingTime] = useState(disabledTime);
   const [isButtonDisabled, setIsButtonDisabled] = useState(disabled);
 

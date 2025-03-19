@@ -40,7 +40,7 @@ export default function Menu() {
         }
         if (device.Mount) {
           getEquipByID(device.Mount).then(equip => {
-            setEquipment(equip);
+            setEquipment([...(equipment || []), equip]);
           });
         }
         if (device.Warehouse) {

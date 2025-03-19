@@ -5,10 +5,14 @@ import { router } from 'expo-router';
 
 import { useTheme } from '@/contexts/themeContext';
 
-const routeBack = () => {
+const routeBack = (issue: boolean) => {
   if(router.canGoBack()) {
-    router.back();
-  } else {
+    if(!issue) {
+      router.back();
+    } else {
+      alert('Please report the issue before leaving the page.');
+    }
+  } else {      
     router.replace('/');
   }
 }
@@ -43,18 +47,20 @@ const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
 type PressableButtonProps = {
   bgColor?: string;
   inverseBlankSpace?: string;
+  issue?: boolean;
 };
 
 const BackButton: React.FC<PressableButtonProps> = ({
   bgColor,
   inverseBlankSpace,
+  issue,
   ...rest
 }) => {
   const { theme } = useTheme();
 
   return (
     <ButtonContainer
-      onPress={() => routeBack()}
+      onPress={() => routeBack(issue || false)}
       $bgColor={bgColor || theme.secondaryColor}
       {...rest}
     >

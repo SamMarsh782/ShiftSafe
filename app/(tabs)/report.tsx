@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, Button, Image, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import { reportIssue } from '@/utils/apis/reportIssue';
 
@@ -16,8 +16,6 @@ import { useUser } from '@/contexts/userContext';
 import { useEquipment } from '@/contexts/equipmentContext';
 import { useWarehouse } from '@/contexts/warehouseContext';
 
-import { Equipment } from '@/types/equipment';
-
 export default function Report() {
   const { theme } = useTheme();
   const { user } = useUser();
@@ -27,6 +25,15 @@ export default function Report() {
   const [description, setDescription] = useState<string>('');
   const [imageData, setImageData] = useState<string | null>(null);
   const descriptionBoxRef = useRef<{ getText: () => string }>(null);
+  
+  const { issue } = useLocalSearchParams();
+  const [issueReported, setIssueReported] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (issue === 'true') {
+      setIssueReported(true);
+    }
+  }, [issue]);
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -82,7 +89,7 @@ export default function Report() {
   const handleSubmit = () => {
     if (selectedImage && imageData) {
       const currentDescription = descriptionBoxRef.current?.getText() || '';
-      reportIssue(imageData, currentDescription, user?.ID ?? null, equipment?.ID ?? null, warehouse?.ID ?? null);
+      reportIssue(imageData, currentDescription, user?.ID ?? null, equipment?.[0]?.ID ?? null, warehouse?.ID ?? null);
       setDescription('');
       setSelectedImage(null);
       setImageData(null);
@@ -96,7 +103,7 @@ export default function Report() {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       {user ? (
         <BGScrollView>
-          <Header title="Report a Problem" />
+          <Header title="Report a Problem" issue={issueReported} />
           <StandardButton
             title="Pick an image from camera roll"
             onPress={pickImage}

@@ -2,14 +2,14 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Equipment } from '@/types/equipment';
 
 type EquipmentContextType = {
-  equipment: Equipment | null;
-  setEquipment: (equipment: Equipment | null) => void;
+  equipment: Equipment[] | null;
+  setEquipment: (equipment: Equipment[] | null) => void;
 };
 
 const EquipmentContext = createContext<EquipmentContextType | undefined>(undefined);
 
 export const EquipmentProvider = ({ children }: { children: ReactNode }) => {
-  const [equipment, setEquipment] = useState<Equipment | null>(null);
+  const [equipment, setEquipment] = useState<Equipment[] | null>(null);
 
   return (
     <EquipmentContext.Provider value={{ equipment, setEquipment }}>

@@ -105,7 +105,7 @@ const CheckDigitModal = ({
     if (checkDigit === user.Check_Digit) {
       setModalVisible(false);
       setUser(user);
-      setEquipment({ID: null, Name: null, Type: null});
+      setEquipment([]);
       router.replace({
         pathname: "./",
         params: {userId: user.ID}
@@ -128,7 +128,7 @@ const CheckDigitModal = ({
               <SquareButton
                 key={index}
                 bgColor={theme.tertiaryColor}
-                inverseBlankSpace={theme.blankSpace}
+                textColor={theme.blankSpace}
                 size="50px"
                 onPress={() =>
                   handleCDPress(

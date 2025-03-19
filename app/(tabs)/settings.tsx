@@ -82,7 +82,7 @@ const Settings = () => {
             <Field label="User:" value={user?.Name ?? ''} />
             <Field
               label="Asset:"
-              value={`${equipment?.Name ?? ''} ${equipment?.Type ?? ''}`}
+              value={`${(equipment && equipment[0]?.Name) ?? ''} ${(equipment && equipment[0]?.Type) ?? ''}`}
             />
           </WideContainer>
           <WideContainer>

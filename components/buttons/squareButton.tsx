@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useTheme } from '@/contexts/themeContext';
 
 type TextProps = {
-  $inverseBlankSpace?: string;
+  $textColor?: string;
   disabled?: boolean;
 };
 
@@ -14,7 +14,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${(props: TextProps) => props.$inverseBlankSpace};
+  color: ${(props: TextProps) => props.$textColor};
 `;
 
 type ButtonContainerProps = {
@@ -40,7 +40,7 @@ type PressableButtonProps = {
   onPress: () => void;
   title: string;
   bgColor?: string;
-  inverseBlankSpace?: string;
+  textColor?: string;
   size?: string;
   disabled?: boolean;
   disabledTime?: number;
@@ -50,13 +50,13 @@ const SquareButton = ({
   onPress,
   title,
   bgColor,
-  inverseBlankSpace,
+  textColor,
   size,
   disabled,
   disabledTime = 0,
   ...rest
 }: PressableButtonProps) => {
-  const { theme } = useTheme(); // Use the useTheme hook
+  const { theme } = useTheme();
   const [remainingTime, setRemainingTime] = useState(disabledTime);
   const [isButtonDisabled, setIsButtonDisabled] = useState(disabled);
 
@@ -92,7 +92,7 @@ const SquareButton = ({
       disabled={isButtonDisabled}
       {...rest}
     >
-      <ButtonText $inverseBlankSpace={inverseBlankSpace || theme.blankSpace}>
+      <ButtonText $textColor={textColor || theme.blankSpace}>
         {remainingTime > 0 ? remainingTime : title}
       </ButtonText>
     </ButtonContainer>

@@ -6,7 +6,7 @@ export async function getEquipment(user: number, wrhs: number): Promise<any> {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ "User": user, "Warehouse": wrhs }), // Adjust the body as needed
+      body: JSON.stringify({ "User": user, "Warehouse": wrhs }),
     });
     if (response.ok) {
       const data = await response.json();

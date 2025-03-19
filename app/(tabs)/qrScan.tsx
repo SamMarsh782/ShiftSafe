@@ -23,7 +23,7 @@ export default function QRScan() {
                     ({ data }) => {
                         router.replace({
                             pathname: "./",
-                            params: {qrData: data.toString()}
+                            params: {qrData: data}
                         });
                     }
                 }

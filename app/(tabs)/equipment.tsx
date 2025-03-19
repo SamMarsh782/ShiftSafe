@@ -7,7 +7,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import ScrollBGView from '@/components/views/scrollBGView';
 import ButtonList from '@/components/buttons/buttonList';
 import Header from '@/components/views/header';
-import QuestionsModal from '@/components/modals/questionsModal';
 import BackgroundView from '@/components/views/backgroundView';
 import StandardButton from '@/components/buttons/standardButton';
 import SearchBar from '@/components/inputs/searchBar';
@@ -30,12 +29,7 @@ export default function EquipmentPage() {
   const { warehouse } = useWarehouse();
   const [searchText, setSearchText] = useState('');
 
-  const [newAnswers, setNewAnswers] = useState([]);
-
-  const [questionsModalVisible, setQuestionsModalVisible] = useState(false);
-
   const [equipmentData, setEquipmentData] = useState<Equipment[]>([]);
-  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
 
     useEffect(() => {
       if (user && user.ID !== null) {
@@ -49,27 +43,10 @@ export default function EquipmentPage() {
       }
     }, [user]);
 
-  const [questionData, setQuestionData] = useState<Question[]>([]);
-
-    useEffect(() => {
-      if (selectedEquipment) {
-        getQuestions(selectedEquipment.ID!).then(questions => {
-          setQuestionData(questions);
-          if(selectedEquipment) {
-            setQuestionsModalVisible(true);
-          }
-        }).catch(error => {
-          console.error('Error fetching users:', error.message);
-        });
-      }
-    }, [selectedEquipment]);
-
   const handleSelectItem = (itm: any) => {
-    setSelectedEquipment(itm);
+    setEquipment([...(equipment || []), itm]);
+    router.push('./pretrip');
   };
-
-
-  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
@@ -81,17 +58,6 @@ export default function EquipmentPage() {
           label='Search Equipment'
           icon={<Icon name="search" size={20} color={theme.primaryColor} />}
         />
-        {questionsModalVisible && selectedEquipment ? (
-          <QuestionsModal
-            selectedEquipment={selectedEquipment}
-            setSelectedEquipment={setSelectedEquipment}
-            modalVisible={questionsModalVisible}
-            setModalVisible={setQuestionsModalVisible}
-            questions={questionData}
-            newAnswers={newAnswers}
-            setNewAnswers={setNewAnswers}
-          />
-        ) : null}
         {user ? (
           equipmentData && equipmentData.length > 0 ? (
             <ButtonList

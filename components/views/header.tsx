@@ -8,9 +8,10 @@ import MenuButton from '../buttons/menuButton';
 
 type headerProps = {
   title?: string;
+  issue?: boolean;
 };
 
-const HeaderComponent: React.FC<React.PropsWithChildren<headerProps>> = ({ children, title }) => {
+const HeaderComponent: React.FC<React.PropsWithChildren<headerProps>> = ({ children, title, issue }) => {
   const { theme } = useTheme();
 
   const Header = styled(View)`
@@ -33,7 +34,7 @@ const HeaderComponent: React.FC<React.PropsWithChildren<headerProps>> = ({ child
 
   return (
     <Header>
-      <BackButton />
+      <BackButton issue={issue}/>
         <Title>{title}</Title>
       {children}
       <MenuButton />

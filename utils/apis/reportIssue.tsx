@@ -1,4 +1,4 @@
-export async function reportIssue(imageData: string, description: string, user: number | null, equipment: number | null, wrhs: number | null): Promise<any> {
+export async function reportIssue(imageData: string, description: string, user: number | null, equip: number | null, wrhs: number | null): Promise<any> {
   const url = 'https://prod-11.westus.logic.azure.com:443/workflows/f63952a838b74a63ba206bd221da3948/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kAC-gkOS_fXr4votRCsOJZV1SlaIpTwAI4tzS8Lsdpg';
 
   try {
@@ -7,7 +7,7 @@ export async function reportIssue(imageData: string, description: string, user: 
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ image: imageData, Description: description, User: user, Equipment: equipment, Warehouse: wrhs }),
+      body: JSON.stringify({ image: imageData, Description: description, User: user, Equipment: equip, Warehouse: wrhs }),
     });
     if (response.ok) {
       const data = await response.json();
