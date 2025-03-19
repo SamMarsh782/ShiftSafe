@@ -1,22 +1,27 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { router } from 'expo-router';
 
-import { getUsers } from '@/utils/apis/getUsers';
+import { getUsersByWarehouse } from '@/utils/apis/getUsersByWarehouse';
 
 import Header from '@/components/views/header';
 import CheckDigitModal from '@/components/modals/checkDigitModal';
-import { User } from '@/types/user';
 import BackgroundView from '@/components/views/backgroundView';
 import SearchBar from '@/components/inputs/searchBar';
 import ButtonList from '@/components/buttons/buttonList';
+import StandardButton from '@/components/buttons/standardButton';
+import ScrollBGView from '@/components/views/scrollBGView';
+
+import { User } from '@/types/user';
 
 import { useTheme } from '@/contexts/themeContext';
-import StandardButton from '@/components/buttons/standardButton';
+import { useWarehouse } from '@/contexts/warehouseContext';
 
 export default function Login() {
   const { theme, toggleTheme } = useTheme();
+  const { warehouse } = useWarehouse();
 
   const [searchText, setSearchText] = useState('');
   const [cdModalVisible, setCDModalVisible] = useState(false);
@@ -33,12 +38,14 @@ export default function Login() {
   };
 
   useEffect(() => {
-    getUsers().then(users => {
-      setUserData(users);
-      setSelectedUser(users[0]);
-    }).catch(error => {
-      console.error('Error fetching users:', error.message);
-    });
+    if (warehouse && warehouse.ID !== null) {
+      getUsersByWarehouse(warehouse.ID).then(users => {
+        setUserData(users);
+        setSelectedUser(users[0]);
+      }).catch(error => {
+        console.error('Error fetching users:', error.message);
+      });
+    }
     generateCheckDigits();
   }, []);
 
@@ -66,13 +73,22 @@ export default function Login() {
             generateRandomDigits={generateCheckDigits}
           />
         ) : null}
-        <ButtonList
-          items={userData}
-          filter={searchText}
-          onPress={handleSelectItem}
-        >
-          <StandardButton title='cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
-        </ButtonList>
+        {userData && userData.length > 0 ? (
+          <ButtonList
+            items={userData}
+            filter={searchText}
+            onPress={handleSelectItem}
+          >
+            <StandardButton title='cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+          </ButtonList>
+        ) : (
+          <ScrollBGView>
+            <Text style={{ textAlign: 'center', marginTop: 20, color: theme.inverseBlankSpace}}>
+              Something went wrong while loading warehouse or users. Please rolaod the app.
+            </Text>
+            <StandardButton title='Go Back' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+          </ScrollBGView>
+        )}
       </BackgroundView>
     </SafeAreaView>
   );

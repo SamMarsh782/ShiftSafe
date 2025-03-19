@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useTheme } from '@/contexts/themeContext';
 
 type TextProps = {
-  $textColor?: string;
+  $inverseBlankSpace?: string;
 };
 
 const ButtonText = styled(Text)<TextProps>`
@@ -14,7 +14,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${(props: TextProps) => props.$textColor};
+  color: ${(props: TextProps) => props.$inverseBlankSpace};
 `;
 
 type ButtonContainerProps = {
@@ -34,12 +34,12 @@ const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
 
 type PressableButtonProps = {
   bgColor?: string;
-  textColor?: string;
+  inverseBlankSpace?: string;
 };
 
 const MenuButton: React.FC<PressableButtonProps> = ({
   bgColor,
-  textColor,
+  inverseBlankSpace,
   ...rest
 }) => {
   const { theme, toggleTheme } = useTheme();
@@ -50,7 +50,7 @@ const MenuButton: React.FC<PressableButtonProps> = ({
       $bgColor={bgColor || theme.secondaryColor}
       {...rest}
     >
-      <ButtonText $textColor={textColor || theme.blankSpace}>
+      <ButtonText $inverseBlankSpace={inverseBlankSpace || theme.blankSpace}>
         &#9776;
       </ButtonText>
     </ButtonContainer>

@@ -11,30 +11,32 @@ interface ButtonListProps {
 }
 
 const ButtonList: React.FC<ButtonListProps> = ({
-    items,
-    filter = '',
-    onPress,
-    children,
+  items,
+  filter = '',
+  onPress,
+  children,
 }) => {
-    const { theme } = useTheme();
-    return (
-        <ScrollBGView>
-          {items
-            .filter(item => {
-              const name = item.Name ?? '';
+  const { theme } = useTheme();
+  return (
+      <ScrollBGView>
+        {items && items.length > 0
+          ? items
+              .filter(item => {
+                const name = item.Name ?? '';
                 return name.toLowerCase().includes(filter.toLowerCase());
-            })
-            .sort((a, b) => (a.Name ?? '').localeCompare(b.Name ?? ''))
-            .map(item => (
-              <ListButton
-                key={item.ID}
-                title={item.Name}
-                onPress={() => onPress(item)}
-              />
-            ))}
-          {children}
-        </ScrollBGView>
-    );
+              })
+              .sort((a, b) => (a.Name ?? '').localeCompare(b.Name ?? ''))
+              .map(item => (
+                <ListButton
+                  key={item.ID}
+                  title={item.Name}
+                  onPress={() => onPress(item)}
+                />
+              ))
+          : null}
+        {children}
+      </ScrollBGView>
+  );
 };
 
 export default React.memo(ButtonList);

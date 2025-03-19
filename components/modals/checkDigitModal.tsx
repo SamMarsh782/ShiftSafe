@@ -78,7 +78,7 @@ const CheckDigitModal = ({
   const ModalTitle = styled(Text)`
     font-size: 20px;
     font-weight: bold;
-    color: ${theme.textColor};
+    color: ${theme.inverseBlankSpace};
     margin: 10px 10px 0px 10px;
     text-align: center;
   `;
@@ -128,7 +128,7 @@ const CheckDigitModal = ({
               <SquareButton
                 key={index}
                 bgColor={theme.tertiaryColor}
-                textColor={theme.blankSpace}
+                inverseBlankSpace={theme.blankSpace}
                 size="50px"
                 onPress={() =>
                   handleCDPress(
@@ -144,7 +144,7 @@ const CheckDigitModal = ({
           </SpacedView>
           <StandardButton
             bgColor={theme.dangerColor}
-            textColor={theme.blankSpace}
+            inverseBlankSpace={theme.blankSpace}
             onPress={() => handleCancelPress(setModalVisible, generateRandomDigits)}
             title="Cancel"
           />

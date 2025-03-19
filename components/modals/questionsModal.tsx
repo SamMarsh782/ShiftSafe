@@ -77,7 +77,7 @@ const QuestionsModal = ({
   const ModalTitle = styled(Text)`
     font-size: 20px;
     font-weight: bold;
-    color: ${theme.textColor};
+    color: ${theme.inverseBlankSpace};
     margin: 10px 10px 0px 10px;
     text-align: center;
   `;
@@ -86,7 +86,7 @@ const QuestionsModal = ({
     font-size: 15px;
     margin: 10px;
     text-align: flex-start;
-    color: ${theme.textColor};
+    color: ${theme.inverseBlankSpace};
   `;
 
   const QuestionTextContainer = styled(View)`
@@ -175,7 +175,7 @@ const QuestionsModal = ({
                         ? theme.neutralGray
                         : theme.successColor
                     }
-                    textColor={theme.blankSpace}
+                    inverseBlankSpace={theme.blankSpace}
                     onPress={() => handleYesPress(index)}
                     title="Yes"
                     size="40px"
@@ -187,7 +187,7 @@ const QuestionsModal = ({
                         ? theme.neutralGray
                         : theme.dangerColor
                     }
-                    textColor={theme.blankSpace}
+                    inverseBlankSpace={theme.blankSpace}
                     onPress={() => handleNoPress(index)}
                     title="No"
                     size="40px"
@@ -202,13 +202,13 @@ const QuestionsModal = ({
           </StyledScrollViewContainer>
           <StandardButton
             bgColor={theme.successColor}
-            textColor={theme.blankSpace}
+            inverseBlankSpace={theme.blankSpace}
             onPress={() => handleSubmitPress(setModalVisible, setSelectedEquipment)}
             title="Submit"
           />
           <StandardButton
             bgColor={theme.dangerColor}
-            textColor={theme.blankSpace}
+            inverseBlankSpace={theme.blankSpace}
             onPress={() => handleCancelPress(setModalVisible, setSelectedEquipment)}
             title="Cancel"
           />

@@ -15,6 +15,7 @@ import SearchBar from '@/components/inputs/searchBar';
 import { useTheme } from '@/contexts/themeContext';
 import { useUser } from '@/contexts/userContext';
 import { useEquipment } from '@/contexts/equipmentContext';
+import { useWarehouse } from '@/contexts/warehouseContext';
 
 import { Equipment } from '@/types/equipment';
 import { Question } from '@/types/question';
@@ -26,6 +27,7 @@ export default function EquipmentPage() {
   const { theme } = useTheme();
   const { user } = useUser();
   const { equipment, setEquipment } = useEquipment();
+  const { warehouse } = useWarehouse();
   const [searchText, setSearchText] = useState('');
 
   const [newAnswers, setNewAnswers] = useState([]);
@@ -36,9 +38,9 @@ export default function EquipmentPage() {
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
 
     useEffect(() => {
-      if (user) {
-        if (user.ID !== null) {
-          getEquipment(user.ID).then(equips => {
+      if (user && user.ID !== null) {
+        if (warehouse && warehouse.ID !== null) {
+          getEquipment(user.ID, warehouse.ID).then(equips => {
             setEquipmentData(equips);
           }).catch(error => {
             console.error('Error fetching equipment:', error.message);
@@ -91,13 +93,22 @@ export default function EquipmentPage() {
           />
         ) : null}
         {user ? (
-          <ButtonList
-            items={equipmentData}
-            filter={''}
-            onPress={handleSelectItem}
-          >
-            <StandardButton title='Cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
-          </ButtonList>
+          equipmentData && equipmentData.length > 0 ? (
+            <ButtonList
+              items={equipmentData}
+              filter={''}
+              onPress={handleSelectItem}
+            >
+              <StandardButton title='Cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+            </ButtonList>
+          ) : (
+            <ScrollBGView>
+              <Text style={{ textAlign: 'center', marginTop: 20, color: theme.inverseBlankSpace}}>
+                No equipment found. Please add equipment to your profile.
+              </Text>
+              <StandardButton title='Go Back' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+            </ScrollBGView>
+          )
         ) : (
           <ScrollBGView>
             <Text style={{  textAlign: 'center', marginTop: 20, color: theme.inverseBlankSpace}}>

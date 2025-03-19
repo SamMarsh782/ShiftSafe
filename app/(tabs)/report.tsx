@@ -12,9 +12,17 @@ import Header from '@/components/views/header';
 import DescriptionBox from '@/components/inputs/descriptionBox';
 
 import { useTheme } from '@/contexts/themeContext';
+import { useUser } from '@/contexts/userContext';
+import { useEquipment } from '@/contexts/equipmentContext';
+import { useWarehouse } from '@/contexts/warehouseContext';
+
+import { Equipment } from '@/types/equipment';
 
 export default function Report() {
   const { theme } = useTheme();
+  const { user } = useUser();
+  const { equipment } = useEquipment();
+  const { warehouse } = useWarehouse();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string>('');
   const [imageData, setImageData] = useState<string | null>(null);
@@ -74,7 +82,7 @@ export default function Report() {
   const handleSubmit = () => {
     if (selectedImage && imageData) {
       const currentDescription = descriptionBoxRef.current?.getText() || '';
-      reportIssue(imageData, currentDescription);
+      reportIssue(imageData, currentDescription, user?.ID ?? null, equipment?.ID ?? null, warehouse?.ID ?? null);
       setDescription('');
       setSelectedImage(null);
       setImageData(null);
@@ -86,34 +94,43 @@ export default function Report() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
-      <BGScrollView>
-        <Header title="Report a Problem" />
-        <StandardButton
-          title="Pick an image from camera roll"
-          onPress={pickImage}
-          bgColor={theme.primaryColor}
-        />
-        <StandardButton
-          title="Take a photo"
-          onPress={takePhoto}
-          bgColor={theme.primaryColor}
-        />
-        <View style={{ alignItems: 'center', marginTop: 20 }}>
-          {selectedImage ? (
-            <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
-          ) : (
-            null
+      {user ? (
+        <BGScrollView>
+          <Header title="Report a Problem" />
+          <StandardButton
+            title="Pick an image from camera roll"
+            onPress={pickImage}
+            bgColor={theme.primaryColor}
+          />
+          <StandardButton
+            title="Take a photo"
+            onPress={takePhoto}
+            bgColor={theme.primaryColor}
+          />
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            {selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
+            ) : (
+              null
+            )}
+          </View>
+          {selectedImage && (
+            <DescriptionBox ref={descriptionBoxRef} initialValue={description} onSubmit={setDescription} />
           )}
-        </View>
-        {selectedImage && (
-          <DescriptionBox ref={descriptionBoxRef} initialValue={description} onSubmit={setDescription} />
-        )}
-        <StandardButton
-          title="Submit Report"
-          onPress={handleSubmit}
-          bgColor={theme.successColor}
-        />
-      </BGScrollView>
+          <StandardButton
+            title="Submit Report"
+            onPress={handleSubmit}
+            bgColor={theme.successColor}
+          />
+        </BGScrollView>
+      ) : (
+        <BGScrollView>
+          <Text style={{ textAlign: 'center', marginTop: 20, color: theme.inverseBlankSpace }}>
+            No user selected. Please select a user first.
+          </Text>
+          <StandardButton title='Go Back' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+        </BGScrollView>
+      )}
     </SafeAreaView>
   );
 }

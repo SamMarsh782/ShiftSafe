@@ -8,8 +8,8 @@ import 'react-native-reanimated';
 import { ThemeProvider } from '@/contexts/themeContext';
 import { UserProvider } from '@/contexts/userContext';
 import { EquipmentProvider } from '@/contexts/equipmentContext';
+import { WarehouseProvider } from '@/contexts/warehouseContext';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -28,16 +28,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider>
+    <WarehouseProvider>
       <UserProvider>
         <EquipmentProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
+          <ThemeProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
         </EquipmentProvider>
       </UserProvider>
-    </ThemeProvider>
+    </WarehouseProvider>
   );
 }

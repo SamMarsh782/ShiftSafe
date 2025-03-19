@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useTheme } from '@/contexts/themeContext';
 
 type TextProps = {
-  $textColor?: string;
+  $inverseBlankSpace?: string;
   disabled?: boolean;
 };
 
@@ -14,7 +14,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${(props: TextProps) => props.$textColor};
+  color: ${(props: TextProps) => props.$inverseBlankSpace};
 `;
 
 type ButtonContainerProps = {
@@ -40,7 +40,7 @@ type PressableButtonProps = {
   onPress: () => void;
   title: string;
   bgColor?: string;
-  textColor?: string;
+  inverseBlankSpace?: string;
   width?: string;
   disabled?: boolean;
   disabledTime?: number;
@@ -50,7 +50,7 @@ const StandardButton: React.FC<PressableButtonProps> = ({
   onPress,
   title,
   bgColor,
-  textColor,
+  inverseBlankSpace,
   width,
   disabled,
   disabledTime = 0,
@@ -92,7 +92,7 @@ const StandardButton: React.FC<PressableButtonProps> = ({
       disabled={isButtonDisabled}
       {...rest}
     >
-      <ButtonText $textColor={textColor || theme.blankSpace}>
+      <ButtonText $inverseBlankSpace={inverseBlankSpace || theme.blankSpace}>
         {remainingTime > 0 ? remainingTime : title}
       </ButtonText>
     </ButtonContainer>

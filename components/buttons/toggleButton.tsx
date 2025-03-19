@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useTheme } from '@/contexts/themeContext';
 
 type TextProps = {
-  $textColor?: string;
+  $inverseBlankSpace?: string;
 };
 
 const ButtonText = styled(Text)<TextProps>`
@@ -13,7 +13,7 @@ const ButtonText = styled(Text)<TextProps>`
   text-align: center;
   justify-content: center;
   text-transform: uppercase;
-  color: ${props => props.$textColor};
+  color: ${props => props.$inverseBlankSpace};
 `;
 
 type ButtonContainerProps = {
@@ -58,7 +58,7 @@ const BottomContainer = styled(View)<ButtonContainerProps>`
 type PressableButtonProps = {
   title: string;
   bgColor?: string;
-  textColor?: string;
+  inverseBlankSpace?: string;
   width?: string;
   condition: boolean;
   setCondition: (condition: boolean) => void;
@@ -67,7 +67,7 @@ type PressableButtonProps = {
 const ToggleButton = ({
   title,
   bgColor,
-  textColor,
+  inverseBlankSpace,
   width,
   condition,
   setCondition,
@@ -86,7 +86,7 @@ const ToggleButton = ({
       <TopContainer
         $bgColor={condition ? bgColor : theme.darkGray}
         $width={width}>
-        <ButtonText $textColor={textColor}>
+        <ButtonText $inverseBlankSpace={inverseBlankSpace}>
           {title}
           <Text style={{fontSize: 15}}>&#8593;</Text>
         </ButtonText>
@@ -94,7 +94,7 @@ const ToggleButton = ({
       <BottomContainer
         $bgColor={condition ? theme.darkGray : bgColor}
         $width={width}>
-        <ButtonText $textColor={textColor}>
+        <ButtonText $inverseBlankSpace={inverseBlankSpace}>
           {title}
           <Text style={{fontSize: 15}}>&#8595;</Text>
         </ButtonText>

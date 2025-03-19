@@ -6,9 +6,10 @@ export class Device {
     Longitude: number | null;
     Owner: number | null;
     Mount: number | null;
+    Warehouse: number | null;
 
 
-    constructor(ID: number, Device_Name: string, Last_User: number, Latitude: number, Longitude: number, Owner: number, Mount: number) {
+    constructor(ID: number, Device_Name: string, Last_User: number, Latitude: number, Longitude: number, Owner: number, Mount: number, Warehouse: number) {
         this.ID = ID;
         this.Device_Name = Device_Name;
         this.Last_User = Last_User;
@@ -16,5 +17,6 @@ export class Device {
         this.Longitude = Longitude;
         this.Owner = Owner;
         this.Mount = Mount;
+        this.Warehouse = Warehouse;
     }
 }      
