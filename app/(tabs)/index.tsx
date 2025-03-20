@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, ActivityIndicator, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import * as Device from 'expo-device';
 
@@ -24,43 +24,72 @@ export default function Menu() {
   const { equipment, setEquipment } = useEquipment();
   const { warehouse, setWarehouse } = useWarehouse();
   const [deviceName] = useState<string | null>(Device.deviceName);
-  
+  const [loading, setLoading] = useState(true); // Add loading state
   
   useEffect(() => {
     if (deviceName) {
-      getDevice(deviceName).then(device => {
-        if (device.Owner) {
-          getUserByID(device.Owner).then(user => {
-            setUser(user);
+      getDevice(deviceName)
+        .then((device) => {
+          const promises = [];
+
+          if (device.Owner) {
+            promises.push(
+              getUserByID(device.Owner).then((user) => {
+                setUser(user);
+              })
+            );
+          } else {
+            router.replace({
+              pathname: './users',
+            });
+          }
+
+          if (device.Mount) {
+            promises.push(
+              getEquipByID(device.Mount).then((equip) => {
+                setEquipment([...(equipment || []), equip]);
+              })
+            );
+          }
+
+          if (device.Warehouse) {
+            promises.push(
+              getWarehouseByID(device.Warehouse).then((warehouse) => {
+                setWarehouse(warehouse);
+              })
+            );
+          }
+
+          // Wait for all promises to resolve
+          Promise.all(promises).finally(() => {
+            setLoading(false); // Set loading to false once all data is fetched
           });
-        } else {
-          router.replace({
-            pathname: "./users",
-          });
-        }
-        if (device.Mount) {
-          getEquipByID(device.Mount).then(equip => {
-            setEquipment([...(equipment || []), equip]);
-          });
-        }
-        if (device.Warehouse) {
-          getWarehouseByID(device.Warehouse).then(warehouse => {
-            setWarehouse(warehouse);
-          });
-        }
-      });
+        })
+        .catch((error) => {
+          console.error('Error fetching device data:', error);
+          setLoading(false); // Stop loading even if there is an error
+        });
     }
   }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={theme.primaryColor} />
+        <Text style={{ marginTop: 10, color: theme.inverseBlankSpace }}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
-        <Header title='Select A Task'/>
-          <ScrollBGView>
-            <StandardButton title='Change User' onPress={() => router.push('./users')}/>
-            <StandardButton title='Complete Pretrip' onPress={() => router.push('./equipment')}/>
-            <StandardButton title='Report Problem' onPress={() => router.push('./report')}/>
-          </ScrollBGView>
+        <Header title="Select A Task" />
+        <ScrollBGView>
+          <StandardButton title="Change User" onPress={() => router.push('./users')} />
+          <StandardButton title="Complete Pretrip" onPress={() => router.push('./equipment')} />
+          <StandardButton title="Report Problem" onPress={() => router.push('./report')} />
+        </ScrollBGView>
       </BackgroundView>
     </SafeAreaView>
   );

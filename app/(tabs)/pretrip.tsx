@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, View } from 'react-native';
+import { Modal, Text, View, ActivityIndicator } from 'react-native';
 import styled from 'styled-components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -22,7 +22,7 @@ import { submitPretrip } from '@/utils/apis/submitPretrip';
 
 export default function Pretrip() {
   const { theme } = useTheme();
-  const { equipment, setEquipment } = useEquipment();
+  const { equipment } = useEquipment();
   const { user } = useUser();
 
   const [qrModalVisible, setQRModalVisible] = useState(false);
@@ -30,14 +30,22 @@ export default function Pretrip() {
   const [expectedQR, setexpectedQR] = useState<string>('');
   const [questionData, setQuestionData] = useState<Question[]>([]);
   const [answerIndex, setAnswerIndex] = useState<number>(-1);
-  
+  const [loading, setLoading] = useState(true); // Add loading state
+
   useEffect(() => {
     if (equipment && equipment.length > 0) {
-      getQuestions(equipment[0].ID!).then(questions => {
-        setQuestionData(questions);
-      }).catch(error => {
-        console.error('Error fetching users:', error.message);
-      });
+      getQuestions(equipment[0].ID!)
+        .then((questions) => {
+          setQuestionData(questions);
+        })
+        .catch((error) => {
+          console.error('Error fetching questions:', error.message);
+        })
+        .finally(() => {
+          setLoading(false); // Set loading to false after data is fetched
+        });
+    } else {
+      setLoading(false); // Stop loading if no equipment is available
     }
   }, [equipment]);
 
@@ -79,19 +87,19 @@ export default function Pretrip() {
   function updateAnswer(index: number, answer: string) {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers];
-      updatedAnswers[index] = 'Yes';
+      updatedAnswers[index] = answer;
       return updatedAnswers;
     });
   }
 
   function handleYesPress(index: number) {
-    if(questionData[index].Check_String) {
+    if (questionData[index].Check_String) {
       setAnswerIndex(index);
       setexpectedQR(questionData[index].Check_String);
       setQRModalVisible(true);
     }
   }
-  
+
   function handleNoPress(index: number) {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers];
@@ -101,7 +109,10 @@ export default function Pretrip() {
   }
 
   function allQuestionsAnswered(answers: string[]) {
-    return answers.length === questionData.length && answers.every((answer) => answer !== undefined);
+    return (
+      answers.length === questionData.length &&
+      answers.every((answer) => answer !== undefined)
+    );
   }
 
   function problemIndicated(answers: string[]) {
@@ -113,7 +124,7 @@ export default function Pretrip() {
       alert('Please answer all questions before submitting.');
       return;
     }
-  
+
     const answersArray = questionData.map((question: any, index: number) => ({
       User_ID: user?.ID,
       Asset_ID: equipment && equipment[0]?.ID,
@@ -122,12 +133,14 @@ export default function Pretrip() {
       Time_Submitted: new Date().toISOString(),
     }));
     submitPretrip(answersArray);
-    if(problemIndicated(answers)) {
-      alert('Problem indicated. Please provide a picture of the issue and a description.');
+    if (problemIndicated(answers)) {
+      alert(
+        'Problem indicated. Please provide a picture of the issue and a description.'
+      );
       router.push({
-        pathname: "./report",
-        params: {issue: 'true'}
-    });
+        pathname: './report',
+        params: { issue: 'true' },
+      });
     } else {
       router.push('./');
     }
@@ -139,16 +152,36 @@ export default function Pretrip() {
     router.push('./equipment');
   }
 
+  if (loading) {
+    // Show loading indicator while data is being fetched
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: theme.secondaryColor,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator size="large" color={theme.primaryColor} />
+        <Text style={{ marginTop: 10, color: theme.inverseBlankSpace }}>
+          Loading...
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
-        <Header title='Submit a Pretrip' />
+        <Header title="Submit a Pretrip" />
         {qrModalVisible && (
           <QRModal
             modalVisible={qrModalVisible}
             setModalVisible={setQRModalVisible}
             onScan={checkValue}
-          />)} 
+          />
+        )}
         <ScrollBGView bgColor={theme.blankSpace}>
           {questionData.map((question: any, index: number) => (
             <LeftHoView key={index}>
@@ -197,4 +230,4 @@ export default function Pretrip() {
       </BackgroundView>
     </SafeAreaView>
   );
-};
+}

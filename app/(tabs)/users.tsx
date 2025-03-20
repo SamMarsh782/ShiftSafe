@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text } from 'react-native';
+import { Text, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { router } from 'expo-router';
@@ -20,7 +20,7 @@ import { useTheme } from '@/contexts/themeContext';
 import { useWarehouse } from '@/contexts/warehouseContext';
 
 export default function Login() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const { warehouse } = useWarehouse();
 
   const [searchText, setSearchText] = useState('');
@@ -28,6 +28,7 @@ export default function Login() {
   const [checkDigits, setCheckDigits] = useState([0, 0, 0]);
   const [userData, setUserData] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const generateCheckDigits = () => {
     const digits = [];
@@ -39,12 +40,19 @@ export default function Login() {
 
   useEffect(() => {
     if (warehouse && warehouse.ID !== null) {
-      getUsersByWarehouse(warehouse.ID).then(users => {
-        setUserData(users);
-        setSelectedUser(users[0]);
-      }).catch(error => {
-        console.error('Error fetching users:', error.message);
-      });
+      getUsersByWarehouse(warehouse.ID)
+        .then((users) => {
+          setUserData(users);
+          setSelectedUser(users[0]);
+        })
+        .catch((error) => {
+          console.error('Error fetching users:', error.message);
+        })
+        .finally(() => {
+          setLoading(false); // Set loading to false after data is fetched
+        });
+    } else {
+      setLoading(false); // Stop loading if warehouse is not available
     }
     generateCheckDigits();
   }, []);
@@ -54,10 +62,29 @@ export default function Login() {
     setSelectedUser(itm);
   };
 
+  if (loading) {
+    // Show loading indicator while data is being fetched
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: theme.secondaryColor,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator size="large" color={theme.primaryColor} />
+        <Text style={{ marginTop: 10, color: theme.inverseBlankSpace }}>
+          Loading...
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.secondaryColor }}>
       <BackgroundView>
-        <Header title='Select User'/>
+        <Header title="Select User" />
         <SearchBar
           initialValue={searchText}
           setSearchText={setSearchText}
@@ -79,14 +106,29 @@ export default function Login() {
             filter={searchText}
             onPress={handleSelectItem}
           >
-            <StandardButton title='cancel' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+            <StandardButton
+              title="cancel"
+              bgColor={theme.dangerColor}
+              onPress={() => router.push('./')}
+            />
           </ButtonList>
         ) : (
           <ScrollBGView>
-            <Text style={{ textAlign: 'center', marginTop: 20, color: theme.inverseBlankSpace}}>
-              Something went wrong while loading warehouse or users. Please rolaod the app.
+            <Text
+              style={{
+                textAlign: 'center',
+                marginTop: 20,
+                color: theme.inverseBlankSpace,
+              }}
+            >
+              Something went wrong while loading warehouse or users. Please
+              reload the app.
             </Text>
-            <StandardButton title='Go Back' bgColor={theme.dangerColor} onPress={() => router.push('./')}/>
+            <StandardButton
+              title="Go Back"
+              bgColor={theme.dangerColor}
+              onPress={() => router.push('./')}
+            />
           </ScrollBGView>
         )}
       </BackgroundView>
