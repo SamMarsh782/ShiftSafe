@@ -28,7 +28,7 @@ export default function Login() {
   const [checkDigits, setCheckDigits] = useState([0, 0, 0]);
   const [userData, setUserData] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   const generateCheckDigits = () => {
     const digits = [];
@@ -49,10 +49,10 @@ export default function Login() {
           console.error('Error fetching users:', error.message);
         })
         .finally(() => {
-          setLoading(false); // Set loading to false after data is fetched
+          setLoading(false);
         });
     } else {
-      setLoading(false); // Stop loading if warehouse is not available
+      setLoading(false);
     }
     generateCheckDigits();
   }, []);
@@ -63,7 +63,6 @@ export default function Login() {
   };
 
   if (loading) {
-    // Show loading indicator while data is being fetched
     return (
       <SafeAreaView
         style={{
@@ -86,10 +85,8 @@ export default function Login() {
       <BackgroundView>
         <Header title="Select User" />
         <SearchBar
-          initialValue={searchText}
           setSearchText={setSearchText}
           label="Search"
-          icon={<Icon name="search" size={20} color={theme.primaryColor} />}
         />
         {cdModalVisible && selectedUser ? (
           <CheckDigitModal

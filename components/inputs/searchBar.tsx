@@ -7,6 +7,7 @@ import {
   TextInput,
   KeyboardTypeOptions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { useTheme } from '@/contexts/themeContext';
 
@@ -40,30 +41,26 @@ const StyledFieldText = styled(Text)<{ color: string }>`
 `;
 
 interface SortBarProps {
-  initialValue: string;
   setSearchText: (text: string) => void;
   label: string;
-  icon: JSX.Element;
   keyboardType?: KeyboardTypeOptions;
   fieldButtonLabel?: string;
   fieldButtonFunction?: () => void;
 };
 
 const SearchBar = ({
-  initialValue,
   setSearchText,
   label,
-  icon,
   keyboardType = 'default',
 }: SortBarProps) => {
-  const [text, setText] = useState(initialValue);
+  const [text, setText] = useState('');
 
   const { theme } = useTheme();
 
   return (
     <Container>
       <RowView bgColor={theme.blankSpace}>
-        {icon}
+        <Icon name="search" size={20} color={theme.primaryColor} />
         <StyledTextInput
           autoCapitalize="none"
           placeholder={label}

@@ -24,7 +24,7 @@ export default function Menu() {
   const { equipment, setEquipment } = useEquipment();
   const { warehouse, setWarehouse } = useWarehouse();
   const [deviceName] = useState<string | null>(Device.deviceName);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     if (deviceName) {
@@ -60,14 +60,13 @@ export default function Menu() {
             );
           }
 
-          // Wait for all promises to resolve
           Promise.all(promises).finally(() => {
-            setLoading(false); // Set loading to false once all data is fetched
+            setLoading(false);
           });
         })
         .catch((error) => {
           console.error('Error fetching device data:', error);
-          setLoading(false); // Stop loading even if there is an error
+          setLoading(false);
         });
     }
   }, []);

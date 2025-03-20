@@ -29,7 +29,7 @@ export default function EquipmentPage() {
   const { warehouse } = useWarehouse();
   const [searchText, setSearchText] = useState('');
   const [equipmentData, setEquipmentData] = useState<Equipment[]>([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user && user.ID !== null) {
@@ -42,13 +42,13 @@ export default function EquipmentPage() {
             console.error('Error fetching equipment:', error.message);
           })
           .finally(() => {
-            setLoading(false); // Set loading to false after data is fetched
+            setLoading(false);
           });
       } else {
-        setLoading(false); // Stop loading if warehouse is not available
+        setLoading(false);
       }
     } else {
-      setLoading(false); // Stop loading if user is not available
+      setLoading(false);
     }
   }, [user, warehouse]);
 
@@ -58,7 +58,6 @@ export default function EquipmentPage() {
   };
 
   if (loading) {
-    // Show loading indicator while data is being fetched
     return (
       <SafeAreaView
         style={{

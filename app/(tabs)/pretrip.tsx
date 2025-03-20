@@ -30,7 +30,7 @@ export default function Pretrip() {
   const [expectedQR, setexpectedQR] = useState<string>('');
   const [questionData, setQuestionData] = useState<Question[]>([]);
   const [answerIndex, setAnswerIndex] = useState<number>(-1);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (equipment && equipment.length > 0) {
@@ -42,10 +42,10 @@ export default function Pretrip() {
           console.error('Error fetching questions:', error.message);
         })
         .finally(() => {
-          setLoading(false); // Set loading to false after data is fetched
+          setLoading(false);
         });
     } else {
-      setLoading(false); // Stop loading if no equipment is available
+      setLoading(false);
     }
   }, [equipment]);
 
@@ -153,7 +153,6 @@ export default function Pretrip() {
   }
 
   if (loading) {
-    // Show loading indicator while data is being fetched
     return (
       <SafeAreaView
         style={{
